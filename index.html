@@ -242,14 +242,17 @@ select.form-input option { background: #1a1f38; }
 .tx-detail-value { font-weight: 500; }
 .tx-view-btn { font-size: 12px; font-weight: 600; padding: 5px 12px; border: none; background: none; border-radius: 7px; cursor: pointer; color: var(--text2); font-family: inherit; }
 .tx-view-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-.cat-group-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 6px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
+.cat-group-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 0 6px; border-top: 1px solid var(--border); }
 .cat-group-name { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; display: flex; align-items: center; gap: 6px; }
 .cat-group-right { display: flex; align-items: center; gap: 8px; }
 .cat-group-total { font-size: 15px; font-weight: 700; }
 .cat-group-count { font-size: 11px; color: var(--text3); }
-.cat-group-item { border-bottom: 1px solid var(--border); }
+.cat-group-item { border-bottom: none; }
 .cat-group-item:last-child { border-bottom: none; }
 .cat-group-item:last-of-type { border-bottom: none; }
+.cat-group-item .tx-item { border-bottom: 1px solid var(--border); }
+.cat-group-item .tx-item:last-child { border-bottom: none; }
+.cat-group-item:first-child .cat-group-header { border-top: none; }
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }</style>
 </head>
 <body>
@@ -296,6 +299,7 @@ select.form-input option { background: #1a1f38; }
     <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
       <button class="tx-view-btn active" id="tvbtn-list" onclick="setTxView('list')">Lista</button>
       <button class="tx-view-btn" id="tvbtn-cats" onclick="setTxView('cats')">Categorías</button>
+      <button class="tx-view-btn" id="tvbtn-accs" onclick="setTxView('accs')">Cuenta</button>
     </div>
   </div>
   <div class="page-content">
@@ -909,6 +913,7 @@ function setTxView(v) {
   txView = v;
   document.getElementById('tvbtn-list').className = 'tx-view-btn' + (v==='list'?' active':'');
   document.getElementById('tvbtn-cats').className = 'tx-view-btn' + (v==='cats'?' active':'');
+  document.getElementById('tvbtn-accs').className = 'tx-view-btn' + (v==='accs'?' active':'');
   renderTxList();
 }
 
@@ -941,7 +946,7 @@ function renderTxList() {
 
   if (txView === 'list') {
     el.innerHTML = transactions.map(t=>txHTML(t,true)).join('');
-  } else {
+  } else if (txView === 'cats') {
     const groups = {};
     transactions.forEach(t => {
       if (!groups[t.category]) groups[t.category] = { items: [], total: 0 };
@@ -964,6 +969,34 @@ function renderTxList() {
             '<svg style="width:16px;height:16px;color:var(--text3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
           '</div>' +
         '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+  } else {
+    // Group by account
+    const groups = {};
+    const noAcc = { items: [], total: 0, name: 'Sin cuenta', color: 'var(--text3)' };
+    transactions.forEach(t => {
+      if (!t.accountId) { noAcc.items.push(t); noAcc.total += (t.type==='income'?t.amount:-t.amount); return; }
+      const acc = accounts.find(a=>a.id===t.accountId);
+      if (!acc) return;
+      if (!groups[acc.id]) groups[acc.id] = { items: [], total: 0, name: acc.name, color: acc.color };
+      groups[acc.id].items.push(t);
+      groups[acc.id].total += (t.type==='income'?t.amount:-t.amount);
+    });
+    if (noAcc.items.length) groups['none'] = noAcc;
+    const sorted = Object.keys(groups).sort((a,b) => Math.abs(groups[b].total) - Math.abs(groups[a].total));
+    if (!sorted.length) { el.innerHTML = '<div class="empty-state">Sin transacciones</div>'; return; }
+    el.innerHTML = '<div>' + sorted.map(key => {
+      const g = groups[key];
+      const totalColor = g.total>=0?'var(--green)':'var(--red)';
+      const sign = g.total>=0?'+':'-';
+      const safeName = g.name.replace(/'/g,"\\'");
+      return '<div class="cat-group-item">' +
+        '<div class="cat-group-header" style="cursor:default">' +
+          '<div class="cat-group-name"><span style="width:10px;height:10px;border-radius:50%;background:'+g.color+';display:inline-block"></span><span>'+g.name+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
+          '<div class="cat-group-right"><span class="cat-group-total" style="color:'+totalColor+'">'+sign+fmt(Math.abs(g.total))+'</span></div>' +
+        '</div>' +
+        g.items.map(t=>txHTML(t,true)).join('') +
       '</div>';
     }).join('') + '</div>';
   }
