@@ -235,9 +235,22 @@ select.form-input option { background: #1a1f38; }
 .cat-chip { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit; }
 .cat-chip.selected { background: var(--blue); border-color: var(--blue); color: #fff; }
 .cat-chip-del { background: none; border: none; color: var(--text3); font-size: 12px; cursor: pointer; padding: 0 0 0 4px; line-height: 1; }
-
-
-</style>
+.tx-chevron { background: none; border: none; color: var(--text3); cursor: pointer; padding: 4px; display: flex; align-items: center; flex-shrink: 0; }
+.tx-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.tx-detail-row:last-child { border-bottom: none; }
+.tx-detail-label { color: var(--text2); }
+.tx-detail-value { font-weight: 500; }
+.tx-view-btn { font-size: 12px; font-weight: 600; padding: 5px 12px; border: none; background: none; border-radius: 7px; cursor: pointer; color: var(--text2); font-family: inherit; }
+.tx-view-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.cat-group-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 6px; border-bottom: 1px solid var(--border); margin-bottom: 2px; }
+.cat-group-name { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .05em; display: flex; align-items: center; gap: 6px; }
+.cat-group-right { display: flex; align-items: center; gap: 8px; }
+.cat-group-total { font-size: 15px; font-weight: 700; }
+.cat-group-count { font-size: 11px; color: var(--text3); }
+.cat-group-item { border-bottom: 1px solid var(--border); }
+.cat-group-item:last-child { border-bottom: none; }
+.cat-group-item:last-of-type { border-bottom: none; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }</style>
 </head>
 <body>
 
@@ -257,24 +270,6 @@ select.form-input option { background: #1a1f38; }
       <div class="pill green" id="h-income-pill">↑ S/ 0.00</div>
       <div class="pill red" id="h-expense-pill">↓ S/ 0.00</div>
     </div>
-    <div class="hero-actions">
-      <button class="hero-action" onclick="openAddTx('income')">
-        <div class="hero-action-icon">↑</div>
-        <span class="hero-action-label">Ingreso</span>
-      </button>
-      <button class="hero-action" onclick="openAddTx('expense')">
-        <div class="hero-action-icon">↓</div>
-        <span class="hero-action-label">Gasto</span>
-      </button>
-      <button class="hero-action" onclick="showPage('page-wallet')">
-        <div class="hero-action-icon">▤</div>
-        <span class="hero-action-label">Cuentas</span>
-      </button>
-      <button class="hero-action" onclick="showPage('page-debts')">
-        <div class="hero-action-icon">⇌</div>
-        <span class="hero-action-label">Deudas</span>
-      </button>
-    </div>
   </div>
 
   <div class="cards-section">
@@ -287,8 +282,8 @@ select.form-input option { background: #1a1f38; }
 
   <div class="tx-section">
     <div class="section-head">
-      <div class="section-title">Recientes</div>
-      <button class="section-link" onclick="showPage('page-tx')">Ver todo</button>
+      <div class="section-title">Movimientos</div>
+      <button class="section-link" onclick="showPage('page-tx')">Ver todos</button>
     </div>
     <div id="home-tx-list"></div>
   </div>
@@ -296,13 +291,34 @@ select.form-input option { background: #1a1f38; }
 
 <!-- TRANSACCIONES -->
 <div class="page" id="page-tx">
-  <div class="topbar"><div class="topbar-title">Transacciones</div>
-    <select class="form-input" id="filter-account" style="width:auto;font-size:12px;padding:6px 10px;border-radius:8px" onchange="renderTxList()">
-      <option value="">Todas</option>
-    </select>
+  <div class="topbar">
+    <div class="topbar-title">Movimientos</div>
+    <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
+      <button class="tx-view-btn active" id="tvbtn-list" onclick="setTxView('list')">Lista</button>
+      <button class="tx-view-btn" id="tvbtn-cats" onclick="setTxView('cats')">Categorías</button>
+    </div>
   </div>
   <div class="page-content">
     <div id="all-tx-list"></div>
+  </div>
+</div>
+
+<!-- CATEGORIA DETALLE -->
+<div class="page" id="page-cat-detail">
+  <div class="topbar">
+    <button onclick="showPage('page-tx')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--blue2);font-family:inherit;font-size:15px;font-weight:500;padding:0">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Movimientos
+    </button>
+    <div class="topbar-title" id="cat-detail-title" style="position:absolute;left:50%;transform:translateX(-50%)"></div>
+  </div>
+  <div class="page-content">
+    <div class="stat-card" style="margin-bottom:16px;text-align:center">
+      <div class="stat-label">Total</div>
+      <div class="stat-value" id="cat-detail-total">S/ 0</div>
+      <div class="stat-sub" id="cat-detail-count"></div>
+    </div>
+    <div id="cat-detail-list"></div>
   </div>
 </div>
 
@@ -526,9 +542,9 @@ select.form-input option { background: #1a1f38; }
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <div class="nav-label">Inicio</div>
   </button>
-  <button class="nav-item" onclick="showPage('page-tx',this)" id="nav-tx">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/><polyline points="19 6 12 13 5 6" opacity=".4"/></svg>
-    <div class="nav-label">Movimientos</div>
+  <button class="nav-item" onclick="showPage('page-debts',this)" id="nav-debts">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    <div class="nav-label">Deudas</div>
   </button>
   <button class="nav-add" onclick="openAddTx('expense')">
     <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -581,6 +597,48 @@ select.form-input option { background: #1a1f38; }
       </div>
     </div>
     <button class="btn-primary" onclick="addTx()">Agregar</button>
+  </div>
+</div>
+
+<!-- MODAL DETALLE TX -->
+<div class="modal-overlay" id="tx-detail-modal" onclick="closeMod(event,'tx-detail-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="tx-detail-title">Detalle</div>
+    <div id="tx-detail-body"></div>
+    <div id="tx-edit-form" style="display:none;margin-top:16px">
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">Categoría</label>
+          <input class="form-input" id="edit-cat">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monto (S/)</label>
+          <input class="form-input" id="edit-amount" type="number" min="0" step="0.01" inputmode="decimal">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Cuenta</label>
+          <select class="form-input" id="edit-account"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input class="form-input" id="edit-date" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nota</label>
+          <input class="form-input" id="edit-note" placeholder="Opcional...">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="saveTxEdit()">Guardar cambios</button>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px" id="tx-detail-actions">
+      <button class="btn-primary" style="background:var(--surface2);color:var(--text);box-shadow:none;border:1px solid var(--border2)" onclick="toggleTxEdit()">Editar</button>
+      <button class="btn-primary" style="background:var(--red-dim);color:var(--red);box-shadow:none" onclick="deleteTxFromDetail()">Eliminar</button>
+    </div>
   </div>
 </div>
 
@@ -642,6 +700,15 @@ let debtType = 'favor';
 let barChart=null, pieChart=null, accChart=null;
 let depositGoalIdx=null, adjustAccIdx=null, settleDebtIdx=null;
 
+// Define closeMod immediately so modal overlays can call it
+function closeMod(e,id){
+  if(e.target.id===id) {
+    document.getElementById(id).classList.remove('open');
+    document.getElementById('tx-edit-form') && (document.getElementById('tx-edit-form').style.display='none');
+    document.getElementById('tx-detail-body') && (document.getElementById('tx-detail-body').style.display='block');
+  }
+}
+
 const COLORS = ['#4f6ef7','#00c896','#ff4d6a','#8b5cf6','#f59e0b','#06b6d4','#ec4899','#10b981'];
 const TYPE_LABELS = { efectivo:'Efectivo', debito:'Débito', credito:'Crédito', ahorros:'Ahorros' };
 
@@ -686,7 +753,6 @@ function openAddTx(type) {
 function populateAccountSelects() {
   const opts = accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
   document.getElementById('f-account').innerHTML = '<option value="">Sin cuenta</option>'+opts;
-  document.getElementById('filter-account').innerHTML = '<option value="">Todas</option>'+opts;
 }
 
 function addAccount() {
@@ -800,24 +866,29 @@ function updateMetrics() {
   document.getElementById('s-balance-sub').textContent=balance>=0?'Superávit este mes':'Déficit este mes';
 }
 
-function txHTML(t,showDel=true) {
-  const sign=t.type==='income'?'+':'-';
-  const d=new Date(t.date+'T12:00:00');
-  const dateStr=d.toLocaleDateString('es-PE',{day:'numeric',month:'short'});
-  const acc=t.accountId?accounts.find(a=>a.id===t.accountId):null;
-  const badge=acc?`<span class="tx-badge" style="color:${acc.color};border-color:${acc.color}55;background:${acc.color}15">${acc.name}</span>`:'';
-  const emoji = t.type==='income' ? '↑' : getCatEmoji(t.category);
-  return `<div class="tx-item">
-    <div class="tx-icon-wrap ${t.type}">${emoji}</div>
-    <div class="tx-info">
-      <div class="tx-name">${t.category}${t.note?` <span style="font-weight:400;color:var(--text3)">· ${t.note}</span>`:''}</div>
-      <div class="tx-sub">${dateStr} ${badge}</div>
-    </div>
-    <div class="tx-right">
-      <div class="tx-amount ${t.type}">${sign}${fmt(t.amount)}</div>
-    </div>
-    ${showDel?`<button class="tx-del-btn" onclick="deleteTx(${t.id})">✕</button>`:''}
-  </div>`;
+function txHTML(t, showAction=false) {
+  const sign = t.type==='income' ? '+' : '-';
+  const d = new Date(t.date+'T12:00:00');
+  const dateStr = d.toLocaleDateString('es-PE', {day:'numeric', month:'short'});
+  const acc = t.accountId ? accounts.find(a=>a.id===t.accountId) : null;
+  const badge = acc ? '<span class="tx-badge" style="color:'+acc.color+';border-color:'+acc.color+'55;background:'+acc.color+'15">'+acc.name+'</span>' : '';
+  const cat = categories.find(c => c.name === t.category);
+  const emoji = cat ? cat.icon : (t.type==='income' ? '↑' : getCatEmoji(t.category));
+  const amountColor = t.type==='income' ? 'var(--green)' : 'var(--red)';
+  const chevron = showAction
+    ? '<button class="tx-chevron" onclick="openTxDetail('+t.id+')">' +
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+      '</button>'
+    : '';
+  return '<div class="tx-item">' +
+    '<div class="tx-icon-wrap ' + t.type + '">' + emoji + '</div>' +
+    '<div class="tx-info">' +
+      '<div class="tx-name">' + t.category + (t.note ? ' <span style="font-weight:400;color:var(--text3)">· ' + t.note + '</span>' : '') + '</div>' +
+      '<div class="tx-sub">' + dateStr + ' ' + badge + '</div>' +
+    '</div>' +
+    '<div class="tx-right"><div class="tx-amount" style="color:' + amountColor + '">' + sign + fmt(t.amount) + '</div></div>' +
+    chevron +
+  '</div>';
 }
 
 function getCatEmoji(cat) {
@@ -832,15 +903,70 @@ function getCatEmoji(cat) {
   return '↓';
 }
 
+let txView = 'list';
+
+function setTxView(v) {
+  txView = v;
+  document.getElementById('tvbtn-list').className = 'tx-view-btn' + (v==='list'?' active':'');
+  document.getElementById('tvbtn-cats').className = 'tx-view-btn' + (v==='cats'?' active':'');
+  renderTxList();
+}
+
+function openCatDetail(cat) {
+  const catObj = categories.find(c=>c.name===cat);
+  const emoji = catObj ? catObj.icon : getCatEmoji(cat);
+  const items = transactions.filter(t=>t.category===cat);
+  const total = items.reduce((s,t)=>s+(t.type==='income'?t.amount:-t.amount),0);
+  const totalColor = total>=0?'var(--green)':'var(--red)';
+  const sign = total>=0?'+':'-';
+
+  document.getElementById('cat-detail-title').textContent = emoji + ' ' + cat;
+  document.getElementById('cat-detail-total').textContent = sign + fmt(Math.abs(total));
+  document.getElementById('cat-detail-total').style.color = totalColor;
+  document.getElementById('cat-detail-count').textContent = items.length + ' transacción' + (items.length===1?'':'es');
+  document.getElementById('cat-detail-list').innerHTML = items.map(t=>txHTML(t,true)).join('');
+
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-cat-detail').classList.add('active');
+  window.scrollTo(0,0);
+}
+
 function renderTxList() {
-  const filterAccId=document.getElementById('filter-account').value;
-  const filtered=filterAccId?transactions.filter(t=>t.accountId==filterAccId):transactions;
-  document.getElementById('home-tx-list').innerHTML=transactions.slice(0,6).length
-    ?transactions.slice(0,6).map(t=>txHTML(t,true)).join('')
-    :'<div class="empty-state">Agrega tu primera transacción</div>';
-  document.getElementById('all-tx-list').innerHTML=filtered.length
-    ?filtered.map(t=>txHTML(t,true)).join('')
-    :'<div class="empty-state">Sin transacciones</div>';
+  document.getElementById('home-tx-list').innerHTML = transactions.slice(0,10).length
+    ? transactions.slice(0,10).map(t=>txHTML(t,false)).join('')
+    : '<div class="empty-state">Agrega tu primera transacción</div>';
+
+  const el = document.getElementById('all-tx-list');
+  if (!transactions.length) { el.innerHTML = '<div class="empty-state">Sin transacciones</div>'; return; }
+
+  if (txView === 'list') {
+    el.innerHTML = transactions.map(t=>txHTML(t,true)).join('');
+  } else {
+    const groups = {};
+    transactions.forEach(t => {
+      if (!groups[t.category]) groups[t.category] = { items: [], total: 0 };
+      groups[t.category].items.push(t);
+      groups[t.category].total += (t.type==='income' ? t.amount : -t.amount);
+    });
+    const sorted = Object.keys(groups).sort((a,b) => Math.abs(groups[b].total) - Math.abs(groups[a].total));
+    el.innerHTML = '<div>' + sorted.map(cat => {
+      const g = groups[cat];
+      const catObj = categories.find(c=>c.name===cat);
+      const emoji = catObj ? catObj.icon : getCatEmoji(cat);
+      const totalColor = g.total >= 0 ? 'var(--green)' : 'var(--red)';
+      const sign = g.total >= 0 ? '+' : '-';
+      const safeCat = cat.replace(/'/g, "\\'");
+      return '<div class="cat-group-item">' +
+        '<div class="cat-group-header" onclick="openCatDetail(\''+safeCat+'\')" style="cursor:pointer">' +
+          '<div class="cat-group-name"><span>'+emoji+'</span><span>'+cat+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
+          '<div class="cat-group-right">' +
+            '<span class="cat-group-total" style="color:'+totalColor+'">'+sign+fmt(Math.abs(g.total))+'</span>' +
+            '<svg style="width:16px;height:16px;color:var(--text3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('') + '</div>';
+  }
 }
 
 // CHARTS
@@ -1047,8 +1173,87 @@ function renderDebts() {
   }).join('');
 }
 
-function closeMod(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('open');}
-window.closeMod = closeMod;
+function toggleTxEdit() {
+  const form = document.getElementById('tx-edit-form');
+  const t = transactions.find(tx => tx.id === currentTxId);
+  if (!t) return;
+  const isOpen = form.style.display !== 'none';
+  if (!isOpen) {
+    document.getElementById('edit-cat').value = t.category;
+    document.getElementById('edit-amount').value = t.amount;
+    document.getElementById('edit-date').value = t.date;
+    document.getElementById('edit-note').value = t.note || '';
+    document.getElementById('edit-account').innerHTML =
+      '<option value="">Sin cuenta</option>' +
+      accounts.map(a => '<option value="'+a.id+'"'+(t.accountId===a.id?' selected':'')+'>'+a.name+'</option>').join('');
+    form.style.display = 'block';
+    document.getElementById('tx-detail-body').style.display = 'none';
+  } else {
+    form.style.display = 'none';
+    document.getElementById('tx-detail-body').style.display = 'block';
+  }
+}
+
+function saveTxEdit() {
+  const t = transactions.find(tx => tx.id === currentTxId);
+  if (!t) return;
+  const newCat = document.getElementById('edit-cat').value.trim();
+  const newAmount = parseFloat(document.getElementById('edit-amount').value);
+  const newDate = document.getElementById('edit-date').value;
+  const newNote = document.getElementById('edit-note').value.trim();
+  const newAccId = document.getElementById('edit-account').value ? parseInt(document.getElementById('edit-account').value) : null;
+  if (!newCat || isNaN(newAmount) || newAmount <= 0) { alert('Completa categoría y monto.'); return; }
+
+  // Revert old account balance
+  if (t.accountId) {
+    const oldAcc = accounts.find(a => a.id === t.accountId);
+    if (oldAcc) oldAcc.balance += (t.type==='income' ? -t.amount : t.amount);
+  }
+  // Apply new account balance
+  if (newAccId) {
+    const newAcc = accounts.find(a => a.id === newAccId);
+    if (newAcc) newAcc.balance += (t.type==='income' ? newAmount : -newAmount);
+  }
+
+  t.category = newCat;
+  t.amount = newAmount;
+  t.date = newDate;
+  t.note = newNote;
+  t.accountId = newAccId;
+  save();
+  document.getElementById('tx-detail-modal').classList.remove('open');
+  document.getElementById('tx-edit-form').style.display = 'none';
+  document.getElementById('tx-detail-body').style.display = 'block';
+  updateAll();
+}
+
+
+
+function openTxDetail(id) {
+  currentTxId = id;
+  const t = transactions.find(tx => tx.id === id);
+  if (!t) return;
+  const sign = t.type==='income' ? '+' : '-';
+  const amountColor = t.type==='income' ? 'var(--green)' : 'var(--red)';
+  const acc = t.accountId ? accounts.find(a=>a.id===t.accountId) : null;
+  const d = new Date(t.date+'T12:00:00');
+  document.getElementById('tx-detail-title').textContent = t.category;
+  document.getElementById('tx-detail-body').innerHTML =
+    '<div class="tx-detail-row"><span class="tx-detail-label">Monto</span><span class="tx-detail-value" style="color:'+amountColor+';font-size:22px;font-weight:700">'+sign+fmt(t.amount)+'</span></div>' +
+    '<div class="tx-detail-row"><span class="tx-detail-label">Tipo</span><span class="tx-detail-value">'+(t.type==='income'?'Ingreso':'Gasto')+'</span></div>' +
+    '<div class="tx-detail-row"><span class="tx-detail-label">Fecha</span><span class="tx-detail-value">'+d.toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'})+'</span></div>' +
+    (acc ? '<div class="tx-detail-row"><span class="tx-detail-label">Cuenta</span><span class="tx-detail-value">'+acc.name+'</span></div>' : '') +
+    (t.note ? '<div class="tx-detail-row"><span class="tx-detail-label">Nota</span><span class="tx-detail-value">'+t.note+'</span></div>' : '');
+  document.getElementById('tx-detail-modal').classList.add('open');
+}
+
+function deleteTxFromDetail() {
+  if (!currentTxId) return;
+  deleteTx(currentTxId);
+  document.getElementById('tx-detail-modal').classList.remove('open');
+}
+
+
 
 // CATEGORIES
 let categories = JSON.parse(localStorage.getItem('fin_cats') || '[]');
