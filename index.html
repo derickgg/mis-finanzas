@@ -500,6 +500,12 @@ select.form-input option { background: #1a1f38; }
           <input class="form-input" id="d-due" type="date">
         </div>
       </div>
+      <div class="form-row" id="d-source-row">
+        <div class="form-group">
+          <label class="form-label">¿De qué cuenta salió?</label>
+          <select class="form-input" id="d-source-account"><option value="">Sin cuenta</option></select>
+        </div>
+      </div>
       <button class="btn-primary" onclick="addDebt()">Registrar deuda</button>
     </div>
     <div id="debts-list"></div>
@@ -774,6 +780,7 @@ function openAddTx(type) {
 function populateAccountSelects() {
   const opts = accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
   document.getElementById('f-account').innerHTML = '<option value="">Sin cuenta</option>'+opts;
+  document.getElementById('d-source-account').innerHTML = '<option value="">Sin cuenta</option>'+opts;
 }
 
 function addAccount() {
@@ -1136,6 +1143,7 @@ function setDebtType(t) {
   document.getElementById('dbtn-favor').className='debt-toggle-btn favor'+(t==='favor'?' active':'');
   document.getElementById('dbtn-contra').className='debt-toggle-btn contra'+(t==='contra'?' active':'');
   document.getElementById('d-name-label').textContent=t==='favor'?'¿Quién te debe?':'¿A quién le debes?';
+  document.getElementById('d-source-row').style.display=t==='favor'?'':'none';
 }
 
 function addDebt() {
@@ -1144,11 +1152,24 @@ function addDebt() {
   const reason=document.getElementById('d-reason').value.trim();
   const created=document.getElementById('d-created').value||todayStr();
   const due=document.getElementById('d-due').value;
+  const sourceAccId=debtType==='favor'?(document.getElementById('d-source-account').value||null):null;
   if(!name||isNaN(amount)||amount<=0){alert('Ingresa nombre y monto.');return;}
-  debts.push({id:Date.now(),name,amount,reason,created,due,type:debtType});
+
+  // Deduct from source account if favor (I lent money)
+  if(debtType==='favor' && sourceAccId) {
+    const acc=accounts.find(a=>a.id===parseInt(sourceAccId));
+    if(acc) {
+      acc.balance -= amount;
+      transactions.unshift({type:'expense',category:'Préstamo a '+name,amount,date:created,note:reason||'',accountId:parseInt(sourceAccId),id:Date.now()});
+      save();
+    }
+  }
+
+  debts.push({id:Date.now()+1,name,amount,reason,created,due,type:debtType,sourceAccId:sourceAccId?parseInt(sourceAccId):null});
   saveDebts();
   document.getElementById('d-name').value='';document.getElementById('d-amount').value='';
   document.getElementById('d-reason').value='';document.getElementById('d-due').value='';
+  document.getElementById('d-source-account').value='';
   updateAll();
 }
 
