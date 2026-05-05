@@ -32,15 +32,37 @@
   --radius-sm: 12px;
   --radius-xs: 8px;
 }
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f5;
+    --surface: #f8f8f8;
+    --surface2: #efefef;
+    --surface3: #e5e5e5;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.15);
+    --text: #0a0a0a;
+    --text2: rgba(10,10,10,0.5);
+    --text3: rgba(10,10,10,0.28);
+    --blue: #3a5bf0;
+    --blue2: #3a5bf0;
+    --green: #00a86b;
+    --green-dim: rgba(0,168,107,0.1);
+    --red: #e02041;
+    --red-dim: rgba(224,32,65,0.1);
+    --purple: #7c3aed;
+    --amber: #d97706;
+  }
+}
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { background: var(--bg); }
 body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: calc(80px + env(safe-area-inset-bottom)); overflow-x: hidden; }
 
 /* BOTTOM NAV */
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: rgba(13,16,36,0.92); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid var(--border); padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid var(--border2); padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; }
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 16px; border: none; background: none; color: var(--text3); font-family: inherit; transition: color .2s; }
 .nav-item.active { color: var(--blue2); }
-.nav-icon { font-size: 20px; line-height: 1; }
+.nav-icon { width: 22px; height: 22px; }
 .nav-label { font-size: 10px; font-weight: 500; letter-spacing: .02em; }
 .nav-add { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; border: none; cursor: pointer; margin-top: -20px; box-shadow: 0 4px 20px rgba(79,110,247,0.5); }
 
@@ -58,7 +80,7 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 /* HOME HERO */
 .hero { padding: 8px 20px 28px; max-width: 600px; margin: 0 auto; text-align: center; }
 .hero-label { font-size: 12px; font-weight: 500; color: var(--text2); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
-.hero-amount { font-size: 52px; font-weight: 700; letter-spacing: -2px; background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,.6)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 16px; }
+.hero-amount { font-size: 52px; font-weight: 700; letter-spacing: -2px; color: var(--text); line-height: 1; margin-bottom: 16px; }
 .hero-pills { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; }
 .pill { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; }
 .pill.green { background: var(--green-dim); color: var(--green); }
@@ -222,7 +244,6 @@ select.form-input option { background: #1a1f38; }
       <div style="font-size:12px;color:var(--text2);margin-bottom:2px" id="current-month-label"></div>
       <div class="topbar-title">Mis finanzas</div>
     </div>
-    <div class="topbar-avatar">F</div>
   </div>
 
   <div class="hero">
@@ -480,20 +501,22 @@ select.form-input option { background: #1a1f38; }
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <button class="nav-item active" onclick="showPage('page-home',this)" id="nav-home">
-    <div class="nav-icon">⌂</div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <div class="nav-label">Inicio</div>
   </button>
   <button class="nav-item" onclick="showPage('page-tx',this)" id="nav-tx">
-    <div class="nav-icon">↕</div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/><polyline points="19 6 12 13 5 6" opacity=".4"/></svg>
     <div class="nav-label">Movimientos</div>
   </button>
-  <button class="nav-add" onclick="openAddTx('expense')">+</button>
+  <button class="nav-add" onclick="openAddTx('expense')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
   <button class="nav-item" onclick="showPage('page-stats',this);updateCharts()" id="nav-stats">
-    <div class="nav-icon">◎</div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     <div class="nav-label">Stats</div>
   </button>
   <button class="nav-item" onclick="showPage('page-more',this)" id="nav-more">
-    <div class="nav-icon">⋯</div>
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
     <div class="nav-label">Más</div>
   </button>
 </nav>
