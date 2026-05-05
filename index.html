@@ -232,7 +232,11 @@ select.form-input option { background: #1a1f38; }
 .modal-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 20px; }
 .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; letter-spacing: -.3px; }
 
-.empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }
+.cat-chip { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); cursor: pointer; transition: all .15s; white-space: nowrap; font-family: inherit; }
+.cat-chip.selected { background: var(--blue); border-color: var(--blue); color: #fff; }
+.cat-chip-del { background: none; border: none; color: var(--text3); font-size: 12px; cursor: pointer; padding: 0 0 0 4px; line-height: 1; }
+
+
 </style>
 </head>
 <body>
@@ -485,6 +489,24 @@ select.form-input option { background: #1a1f38; }
 <div class="page" id="page-more">
   <div class="topbar"><div class="topbar-title">Más</div></div>
   <div class="page-content">
+
+    <!-- CATEGORIAS -->
+    <div class="form-section">
+      <div class="form-section-title">Mis categorías</div>
+      <div id="cats-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px"></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1">
+          <label class="form-label">Ícono</label>
+          <input class="form-input" id="cat-icon" placeholder="🍽" style="font-size:20px;text-align:center" maxlength="2">
+        </div>
+        <div class="form-group" style="flex:3">
+          <label class="form-label">Nombre</label>
+          <input class="form-input" id="cat-name" placeholder="Ej: Almuerzo, Gym...">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addCategory()">Agregar categoría</button>
+    </div>
+
     <div class="guide-card">
       <div class="chart-card-title">Atajo iOS — Apple Pay</div>
       <div class="guide-step"><div class="step-num">1</div><div class="step-text">Descarga la app <strong>Atajos</strong> de la App Store.</div></div>
@@ -530,9 +552,11 @@ select.form-input option { background: #1a1f38; }
       <button class="type-btn expense active" id="btn-expense" onclick="setType('expense')">Gasto</button>
       <button class="type-btn income" id="btn-income" onclick="setType('income')">Ingreso</button>
     </div>
+    <div class="form-label" style="margin-bottom:8px">Categoría</div>
+    <div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
     <div class="form-row">
       <div class="form-group" style="flex:2">
-        <label class="form-label">Categoría</label>
+        <label class="form-label">O escribe una nueva</label>
         <input class="form-input" id="f-cat" placeholder="Ej: Almuerzo, Uber...">
       </div>
       <div class="form-group">
@@ -653,8 +677,9 @@ function setType(t) {
 
 function openAddTx(type) {
   setType(type||'expense');
+  renderCatChips();
   document.getElementById('add-tx-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('f-cat').focus(),300);
+  setTimeout(()=>document.getElementById('f-amount').focus(),300);
 }
 
 // ACCOUNTS
@@ -1023,6 +1048,56 @@ function renderDebts() {
 }
 
 function closeMod(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('open');}
+window.closeMod = closeMod;
+
+// CATEGORIES
+let categories = JSON.parse(localStorage.getItem('fin_cats') || '[]');
+
+function saveCats() { localStorage.setItem('fin_cats', JSON.stringify(categories)); }
+
+function addCategory() {
+  const icon = document.getElementById('cat-icon').value.trim();
+  const name = document.getElementById('cat-name').value.trim();
+  if (!name) { alert('Ingresa un nombre.'); return; }
+  categories.push({ id: Date.now(), icon: icon || '📌', name });
+  saveCats();
+  document.getElementById('cat-icon').value = '';
+  document.getElementById('cat-name').value = '';
+  renderCatsList();
+  renderCatChips();
+}
+
+function deleteCategory(id) {
+  categories = categories.filter(c => c.id !== id);
+  saveCats(); renderCatsList(); renderCatChips();
+}
+
+function renderCatsList() {
+  const el = document.getElementById('cats-list');
+  if (!el) return;
+  if (!categories.length) { el.innerHTML = '<div style="font-size:13px;color:var(--text3)">Sin categorías aún.</div>'; return; }
+  el.innerHTML = categories.map(c =>
+    '<div class="cat-chip" style="cursor:default"><span>' + c.icon + '</span><span>' + c.name + '</span><button class="cat-chip-del" onclick="deleteCategory(' + c.id + ')">✕</button></div>'
+  ).join('');
+}
+
+function renderCatChips() {
+  const el = document.getElementById('cat-chips');
+  if (!el) return;
+  if (!categories.length) { el.innerHTML = '<div style="font-size:12px;color:var(--text3)">Ve a Más para crear categorías.</div>'; return; }
+  el.innerHTML = categories.map(c =>
+    '<button class="cat-chip" onclick="selectCat(\'' + c.name.replace(/'/g,"\\'") + '\')" id="chip-' + c.id + '"><span>' + c.icon + '</span><span>' + c.name + '</span></button>'
+  ).join('');
+}
+
+function selectCat(name) {
+  document.getElementById('f-cat').value = name;
+  document.querySelectorAll('.cat-chip').forEach(ch => ch.classList.remove('selected'));
+  const chips = document.querySelectorAll('#cat-chips .cat-chip');
+  chips.forEach(ch => { if (ch.textContent.includes(name)) ch.classList.add('selected'); });
+}
+
+
 
 function updateAll() {
   updateMetrics();
@@ -1032,6 +1107,8 @@ function updateAll() {
   renderDebts();
   renderGoals();
   populateAccountSelects();
+  renderCatsList();
+  renderCatChips();
 }
 
 // iOS shortcut URL prefill
