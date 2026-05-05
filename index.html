@@ -105,7 +105,22 @@ select.form-input option { background: #242424; }
 .goal-dep-btn { flex: 1; padding: 8px; font-size: 12px; font-weight: 500; background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-sm); cursor: pointer; font-family: inherit; }
 .goal-del-btn { padding: 8px 12px; font-size: 12px; background: none; color: var(--text3); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-family: inherit; }
 
-/* GUIDE */
+/* DEBTS */
+.debt-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 10px; }
+.debt-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.debt-name { font-size: 15px; font-weight: 500; }
+.debt-amount { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--green); }
+.debt-meta { font-size: 12px; color: var(--text3); margin-top: 4px; display: flex; gap: 12px; }
+.debt-due { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+.debt-due.overdue { background: var(--red-dim); color: var(--red); }
+.debt-due.soon { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.debt-due.ok { background: var(--green-dim); color: var(--green); }
+.debt-actions { display: flex; gap: 8px; margin-top: 12px; }
+.debt-paid-btn { flex: 1; padding: 8px; font-size: 12px; font-weight: 500; background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-sm); cursor: pointer; font-family: inherit; }
+.debt-del-btn { padding: 8px 12px; font-size: 12px; background: none; color: var(--text3); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-family: inherit; }
+.debt-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+
+
 .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
 .guide-step { display: flex; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .guide-step:last-child { border-bottom: none; }
@@ -138,6 +153,7 @@ select.form-input option { background: #242424; }
   <button class="tab" onclick="showPanel('wallet',this)">Billetera</button>
   <button class="tab" onclick="showPanel('charts',this)">Gráficos</button>
   <button class="tab" onclick="showPanel('goals',this)">Metas</button>
+  <button class="tab" onclick="showPanel('debts',this)">Me deben</button>
   <button class="tab" onclick="showPanel('shortcut',this)">Atajo iOS</button>
 </div>
 
@@ -306,7 +322,52 @@ select.form-input option { background: #242424; }
     <div id="goals-list"></div>
   </div>
 
+  <!-- ME DEBEN -->
+  <div class="panel" id="panel-debts">
+    <div class="debt-summary">
+      <div class="metric-card">
+        <div class="metric-label">Total pendiente</div>
+        <div class="metric-value" style="color:var(--green)" id="debt-total">S/ 0.00</div>
+        <div class="metric-sub" id="debt-count">0 deudas activas</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Vencidas</div>
+        <div class="metric-value" style="color:var(--red)" id="debt-overdue">S/ 0.00</div>
+        <div class="metric-sub" id="debt-overdue-count">0 deudas</div>
+      </div>
+    </div>
+
+    <div class="quick-add" style="margin-bottom:20px">
+      <div class="quick-add-title">Registrar deuda</div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">¿Quién te debe?</label>
+          <input class="form-input" id="d-name" placeholder="Ej: Juan, María...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monto (S/)</label>
+          <input class="form-input" id="d-amount" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Motivo (opcional)</label>
+          <input class="form-input" id="d-reason" placeholder="Ej: Almuerzo, préstamo...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha límite</label>
+          <input class="form-input" id="d-due" type="date">
+        </div>
+      </div>
+      <button class="btn-add" onclick="addDebt()">Agregar deuda</button>
+    </div>
+
+    <div class="section-title">Deudas pendientes</div>
+    <div id="debts-list"></div>
+  </div>
+
   <!-- ATAJO iOS -->
+
   <div class="panel" id="panel-shortcut">
     <div class="guide-card">
       <div class="chart-title">Cómo crear el atajo de iOS</div>
@@ -629,6 +690,88 @@ function confirmDeposit() {
   document.getElementById('deposit-modal').classList.remove('open');
 }
 
+// DEBTS
+let debts = JSON.parse(localStorage.getItem('fin_debts') || '[]');
+
+function saveDebts() {
+  localStorage.setItem('fin_debts', JSON.stringify(debts));
+}
+
+function addDebt() {
+  const name = document.getElementById('d-name').value.trim();
+  const amount = parseFloat(document.getElementById('d-amount').value);
+  const reason = document.getElementById('d-reason').value.trim();
+  const due = document.getElementById('d-due').value;
+  if (!name || isNaN(amount) || amount <= 0) { alert('Ingresa nombre y monto.'); return; }
+  debts.push({ id: Date.now(), name, amount, reason, due, paid: false });
+  saveDebts();
+  document.getElementById('d-name').value = '';
+  document.getElementById('d-amount').value = '';
+  document.getElementById('d-reason').value = '';
+  document.getElementById('d-due').value = '';
+  renderDebts();
+}
+
+function markDebtPaid(id) {
+  debts = debts.filter(d => d.id !== id);
+  saveDebts(); renderDebts();
+}
+
+function deleteDebt(id) {
+  debts = debts.filter(d => d.id !== id);
+  saveDebts(); renderDebts();
+}
+
+function debtDueStatus(due) {
+  if (!due) return { cls: 'ok', label: 'Sin fecha' };
+  const today = new Date(); today.setHours(0,0,0,0);
+  const d = new Date(due + 'T12:00:00');
+  const diff = Math.round((d - today) / 86400000);
+  if (diff < 0) return { cls: 'overdue', label: 'Vencida hace ' + Math.abs(diff) + ' días' };
+  if (diff === 0) return { cls: 'overdue', label: 'Vence hoy' };
+  if (diff <= 7) return { cls: 'soon', label: 'Vence en ' + diff + ' días' };
+  return { cls: 'ok', label: d.toLocaleDateString('es-PE', { day:'numeric', month:'short', year:'numeric' }) };
+}
+
+function renderDebts() {
+  const active = debts.filter(d => !d.paid);
+  const total = active.reduce((s,d) => s+d.amount, 0);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const overdue = active.filter(d => d.due && new Date(d.due+'T12:00:00') < today);
+  const overdueTotal = overdue.reduce((s,d) => s+d.amount, 0);
+
+  document.getElementById('debt-total').textContent = fmt(total);
+  document.getElementById('debt-count').textContent = active.length + ' deuda' + (active.length===1?'':'s') + ' activa' + (active.length===1?'':'s');
+  document.getElementById('debt-overdue').textContent = fmt(overdueTotal);
+  document.getElementById('debt-overdue-count').textContent = overdue.length + ' deuda' + (overdue.length===1?'':'s');
+
+  const el = document.getElementById('debts-list');
+  if (!active.length) { el.innerHTML = '<div class="empty-state">Sin deudas pendientes 🎉</div>'; return; }
+
+  const sorted = [...active].sort((a,b) => {
+    if (!a.due) return 1; if (!b.due) return -1;
+    return new Date(a.due) - new Date(b.due);
+  });
+
+  el.innerHTML = sorted.map(d => {
+    const status = debtDueStatus(d.due);
+    return `<div class="debt-card">
+      <div class="debt-head">
+        <div>
+          <div class="debt-name">${d.name}</div>
+          ${d.reason ? `<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.reason}</div>` : ''}
+        </div>
+        <div class="debt-amount">${fmt(d.amount)}</div>
+      </div>
+      <span class="debt-due ${status.cls}">${status.label}</span>
+      <div class="debt-actions">
+        <button class="debt-paid-btn" onclick="markDebtPaid(${d.id})">✓ Cobrado</button>
+        <button class="debt-del-btn" onclick="deleteDebt(${d.id})">Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 function closeMod(e,id) { if(e.target.id===id) document.getElementById(id).classList.remove('open'); }
 
 function showPanel(id,btn) {
@@ -639,7 +782,7 @@ function showPanel(id,btn) {
   if(id==='charts') updateCharts();
 }
 
-function updateAll() { updateMetrics(); renderTxLists(); renderWallet(); populateAccountSelects(); }
+function updateAll() { updateMetrics(); renderTxLists(); renderWallet(); populateAccountSelects(); renderDebts(); }
 
 // URL prefill for iOS shortcut
 const params = new URLSearchParams(location.search);
