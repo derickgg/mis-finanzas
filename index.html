@@ -107,10 +107,17 @@ select.form-input option { background: #242424; }
 
 /* DEBTS */
 .debt-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 10px; }
+.debt-card.favor { border-left: 3px solid var(--green); }
+.debt-card.contra { border-left: 3px solid var(--red); }
 .debt-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
 .debt-name { font-size: 15px; font-weight: 500; }
-.debt-amount { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--green); }
-.debt-meta { font-size: 12px; color: var(--text3); margin-top: 4px; display: flex; gap: 12px; }
+.debt-amount { font-family: 'DM Serif Display', serif; font-size: 22px; }
+.debt-amount.favor { color: var(--green); }
+.debt-amount.contra { color: var(--red); }
+.debt-type-badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
+.debt-type-badge.favor { background: var(--green-dim); color: var(--green); }
+.debt-type-badge.contra { background: var(--red-dim); color: var(--red); }
+.debt-meta { font-size: 11px; color: var(--text3); margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .debt-due { padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
 .debt-due.overdue { background: var(--red-dim); color: var(--red); }
 .debt-due.soon { background: rgba(251,191,36,0.12); color: #fbbf24; }
@@ -119,6 +126,10 @@ select.form-input option { background: #242424; }
 .debt-paid-btn { flex: 1; padding: 8px; font-size: 12px; font-weight: 500; background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); border-radius: var(--radius-sm); cursor: pointer; font-family: inherit; }
 .debt-del-btn { padding: 8px 12px; font-size: 12px; background: none; color: var(--text3); border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-family: inherit; }
 .debt-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.debt-toggle { display: flex; background: var(--surface2); border-radius: var(--radius-sm); padding: 3px; margin-bottom: 14px; }
+.debt-toggle-btn { flex: 1; font-size: 13px; font-weight: 500; padding: 8px; border: none; background: none; border-radius: 8px; cursor: pointer; color: var(--text2); transition: all .2s; }
+.debt-toggle-btn.active.favor { background: var(--green-dim); color: var(--green); }
+.debt-toggle-btn.active.contra { background: var(--red-dim); color: var(--red); }
 
 
 .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
@@ -153,7 +164,7 @@ select.form-input option { background: #242424; }
   <button class="tab" onclick="showPanel('wallet',this)">Billetera</button>
   <button class="tab" onclick="showPanel('charts',this)">Gráficos</button>
   <button class="tab" onclick="showPanel('goals',this)">Metas</button>
-  <button class="tab" onclick="showPanel('debts',this)">Me deben</button>
+  <button class="tab" onclick="showPanel('debts',this)">Deudas</button>
   <button class="tab" onclick="showPanel('shortcut',this)">Atajo iOS</button>
 </div>
 
@@ -232,8 +243,18 @@ select.form-input option { background: #242424; }
   <!-- BILLETERA -->
   <div class="panel" id="panel-wallet">
     <div class="wallet-hero">
-      <div class="wallet-hero-label">Total en todas las cuentas</div>
-      <div class="wallet-hero-value" id="wallet-total">S/ 0.00</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left">
+        <div>
+          <div class="wallet-hero-label">Saldo real</div>
+          <div class="wallet-hero-value" id="wallet-total" style="font-size:30px">S/ 0.00</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">En todas las cuentas</div>
+        </div>
+        <div>
+          <div class="wallet-hero-label">Disponible neto</div>
+          <div class="wallet-hero-value" id="wallet-available" style="font-size:30px">S/ 0.00</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Descontando lo que debes</div>
+        </div>
+      </div>
     </div>
     <div class="accounts-grid" id="accounts-grid"></div>
     <div class="quick-add">
@@ -322,27 +343,36 @@ select.form-input option { background: #242424; }
     <div id="goals-list"></div>
   </div>
 
-  <!-- ME DEBEN -->
+  <!-- DEUDAS -->
   <div class="panel" id="panel-debts">
     <div class="debt-summary">
       <div class="metric-card">
-        <div class="metric-label">Total pendiente</div>
-        <div class="metric-value" style="color:var(--green)" id="debt-total">S/ 0.00</div>
-        <div class="metric-sub" id="debt-count">0 deudas activas</div>
+        <div class="metric-label">Me deben</div>
+        <div class="metric-value" style="color:var(--green)" id="debt-favor">S/ 0.00</div>
+        <div class="metric-sub" id="debt-favor-count">0 deudas</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">Vencidas</div>
-        <div class="metric-value" style="color:var(--red)" id="debt-overdue">S/ 0.00</div>
-        <div class="metric-sub" id="debt-overdue-count">0 deudas</div>
+        <div class="metric-label">Debo</div>
+        <div class="metric-value" style="color:var(--red)" id="debt-contra">S/ 0.00</div>
+        <div class="metric-sub" id="debt-contra-count">0 deudas</div>
+      </div>
+      <div class="metric-card full">
+        <div class="metric-label">Balance neto de deudas</div>
+        <div class="metric-value" id="debt-net">S/ 0.00</div>
+        <div class="metric-sub" id="debt-net-sub">—</div>
       </div>
     </div>
 
     <div class="quick-add" style="margin-bottom:20px">
       <div class="quick-add-title">Registrar deuda</div>
+      <div class="debt-toggle">
+        <button class="debt-toggle-btn favor active" id="dbtn-favor" onclick="setDebtType('favor')">Me deben</button>
+        <button class="debt-toggle-btn contra" id="dbtn-contra" onclick="setDebtType('contra')">Yo debo</button>
+      </div>
       <div class="form-row">
         <div class="form-group" style="flex:2">
-          <label class="form-label">¿Quién te debe?</label>
-          <input class="form-input" id="d-name" placeholder="Ej: Juan, María...">
+          <label class="form-label" id="d-name-label">¿Quién te debe?</label>
+          <input class="form-input" id="d-name" placeholder="Nombre...">
         </div>
         <div class="form-group">
           <label class="form-label">Monto (S/)</label>
@@ -355,18 +385,24 @@ select.form-input option { background: #242424; }
           <input class="form-input" id="d-reason" placeholder="Ej: Almuerzo, préstamo...">
         </div>
         <div class="form-group">
-          <label class="form-label">Fecha límite</label>
+          <label class="form-label">Fecha de generación</label>
+          <input class="form-input" id="d-created" type="date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Fecha límite (opcional)</label>
           <input class="form-input" id="d-due" type="date">
         </div>
       </div>
-      <button class="btn-add" onclick="addDebt()">Agregar deuda</button>
+      <button class="btn-add" onclick="addDebt()">Registrar deuda</button>
     </div>
 
-    <div class="section-title">Deudas pendientes</div>
+    <div class="section-title">Deudas activas</div>
     <div id="debts-list"></div>
   </div>
 
-  <!-- ATAJO iOS -->
+
 
   <div class="panel" id="panel-shortcut">
     <div class="guide-card">
@@ -383,7 +419,32 @@ select.form-input option { background: #242424; }
 
 </div>
 
-<!-- MODAL DEPOSITAR -->
+<!-- MODAL SALDAR DEUDA -->
+<div class="modal-overlay" id="settle-modal" onclick="closeMod(event,'settle-modal')">
+  <div class="modal">
+    <div class="modal-title">Saldar deuda</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px">¿A qué cuenta va el dinero?</p>
+    <div class="form-row" style="margin-bottom:10px">
+      <div class="form-group">
+        <label class="form-label">Cuenta</label>
+        <select class="form-input" id="settle-account"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Monto (S/)</label>
+        <input class="form-input" id="settle-amount" type="number" min="0" step="0.01" inputmode="decimal">
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <input class="form-input" id="settle-cat" placeholder="Cobro de deuda">
+      </div>
+    </div>
+    <button class="btn-add" onclick="confirmSettle()">Confirmar</button>
+  </div>
+</div>
+
+
 <div class="modal-overlay" id="deposit-modal" onclick="closeMod(event,'deposit-modal')">
   <div class="modal">
     <div class="modal-title">Depositar a meta</div>
@@ -427,6 +488,7 @@ function fmt(n) {
 function todayStr() { return new Date().toISOString().split('T')[0]; }
 
 document.getElementById('f-date').value = todayStr();
+document.getElementById('d-created').value = todayStr();
 document.getElementById('current-month').textContent = new Date().toLocaleDateString('es-PE', { month:'long', year:'numeric' });
 
 function setType(t) {
@@ -477,7 +539,11 @@ function confirmAdjust() {
 
 function renderWallet() {
   const total = accounts.reduce((s,a) => s + a.balance, 0);
+  const totalDebt = debts.filter(d=>d.type==='contra').reduce((s,d)=>s+d.amount,0);
+  const available = total - totalDebt;
   document.getElementById('wallet-total').textContent = fmt(total);
+  document.getElementById('wallet-available').textContent = fmt(available);
+  document.getElementById('wallet-available').style.color = available>=0?'var(--green)':'var(--red)';
   const grid = document.getElementById('accounts-grid');
   if (!accounts.length) {
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">Agrega tu primera cuenta abajo</div>';
@@ -692,80 +758,122 @@ function confirmDeposit() {
 
 // DEBTS
 let debts = JSON.parse(localStorage.getItem('fin_debts') || '[]');
+let debtType = 'favor';
+let settleDebtIdx = null;
 
-function saveDebts() {
-  localStorage.setItem('fin_debts', JSON.stringify(debts));
+function saveDebts() { localStorage.setItem('fin_debts', JSON.stringify(debts)); }
+
+function setDebtType(t) {
+  debtType = t;
+  document.getElementById('dbtn-favor').className = 'debt-toggle-btn favor' + (t==='favor'?' active':'');
+  document.getElementById('dbtn-contra').className = 'debt-toggle-btn contra' + (t==='contra'?' active':'');
+  document.getElementById('d-name-label').textContent = t==='favor' ? '¿Quién te debe?' : '¿A quién le debes?';
 }
 
 function addDebt() {
   const name = document.getElementById('d-name').value.trim();
   const amount = parseFloat(document.getElementById('d-amount').value);
   const reason = document.getElementById('d-reason').value.trim();
+  const created = document.getElementById('d-created').value || todayStr();
   const due = document.getElementById('d-due').value;
   if (!name || isNaN(amount) || amount <= 0) { alert('Ingresa nombre y monto.'); return; }
-  debts.push({ id: Date.now(), name, amount, reason, due, paid: false });
+  debts.push({ id: Date.now(), name, amount, reason, created, due, type: debtType });
   saveDebts();
   document.getElementById('d-name').value = '';
   document.getElementById('d-amount').value = '';
   document.getElementById('d-reason').value = '';
+  document.getElementById('d-created').value = '';
   document.getElementById('d-due').value = '';
-  renderDebts();
+  renderDebts(); renderWallet();
 }
 
-function markDebtPaid(id) {
-  debts = debts.filter(d => d.id !== id);
-  saveDebts(); renderDebts();
+function openSettle(idx) {
+  settleDebtIdx = idx;
+  const debt = debts[idx];
+  document.getElementById('settle-amount').value = debt.amount;
+  document.getElementById('settle-account').innerHTML = '<option value="">Sin cuenta</option>' + accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+  document.getElementById('settle-cat').value = debt.type==='favor' ? 'Cobro de deuda' : 'Pago de deuda';
+  document.getElementById('settle-modal').classList.add('open');
 }
 
-function deleteDebt(id) {
-  debts = debts.filter(d => d.id !== id);
-  saveDebts(); renderDebts();
+function confirmSettle() {
+  const debt = debts[settleDebtIdx];
+  const accId = document.getElementById('settle-account').value;
+  const cat = document.getElementById('settle-cat').value || (debt.type==='favor'?'Cobro de deuda':'Pago de deuda');
+  const amount = parseFloat(document.getElementById('settle-amount').value) || debt.amount;
+
+  if (accId) {
+    const acc = accounts.find(a=>a.id===parseInt(accId));
+    if (acc) {
+      // favor = cobré = ingreso; contra = pagué = gasto
+      const txType = debt.type==='favor' ? 'income' : 'expense';
+      acc.balance += txType==='income' ? amount : -amount;
+      transactions.unshift({ type:txType, category:cat, amount, date:todayStr(), note: debt.name, accountId:parseInt(accId), id:Date.now() });
+      save();
+    }
+  }
+  debts.splice(settleDebtIdx, 1);
+  saveDebts();
+  document.getElementById('settle-modal').classList.remove('open');
+  updateAll();
 }
+
+function deleteDebt(id) { debts = debts.filter(d=>d.id!==id); saveDebts(); renderDebts(); renderWallet(); }
 
 function debtDueStatus(due) {
-  if (!due) return { cls: 'ok', label: 'Sin fecha' };
+  if (!due) return { cls:'ok', label:'Sin fecha límite' };
   const today = new Date(); today.setHours(0,0,0,0);
-  const d = new Date(due + 'T12:00:00');
-  const diff = Math.round((d - today) / 86400000);
-  if (diff < 0) return { cls: 'overdue', label: 'Vencida hace ' + Math.abs(diff) + ' días' };
-  if (diff === 0) return { cls: 'overdue', label: 'Vence hoy' };
-  if (diff <= 7) return { cls: 'soon', label: 'Vence en ' + diff + ' días' };
-  return { cls: 'ok', label: d.toLocaleDateString('es-PE', { day:'numeric', month:'short', year:'numeric' }) };
+  const d = new Date(due+'T12:00:00');
+  const diff = Math.round((d-today)/86400000);
+  if (diff < 0) return { cls:'overdue', label:'Vencida hace '+Math.abs(diff)+' día'+(Math.abs(diff)===1?'':'s') };
+  if (diff === 0) return { cls:'overdue', label:'Vence hoy' };
+  if (diff <= 7) return { cls:'soon', label:'Vence en '+diff+' día'+(diff===1?'':'s') };
+  return { cls:'ok', label:'Vence el '+d.toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'}) };
 }
 
 function renderDebts() {
-  const active = debts.filter(d => !d.paid);
-  const total = active.reduce((s,d) => s+d.amount, 0);
-  const today = new Date(); today.setHours(0,0,0,0);
-  const overdue = active.filter(d => d.due && new Date(d.due+'T12:00:00') < today);
-  const overdueTotal = overdue.reduce((s,d) => s+d.amount, 0);
+  const favor = debts.filter(d=>d.type==='favor');
+  const contra = debts.filter(d=>d.type==='contra');
+  const totalFavor = favor.reduce((s,d)=>s+d.amount,0);
+  const totalContra = contra.reduce((s,d)=>s+d.amount,0);
+  const net = totalFavor - totalContra;
 
-  document.getElementById('debt-total').textContent = fmt(total);
-  document.getElementById('debt-count').textContent = active.length + ' deuda' + (active.length===1?'':'s') + ' activa' + (active.length===1?'':'s');
-  document.getElementById('debt-overdue').textContent = fmt(overdueTotal);
-  document.getElementById('debt-overdue-count').textContent = overdue.length + ' deuda' + (overdue.length===1?'':'s');
+  document.getElementById('debt-favor').textContent = fmt(totalFavor);
+  document.getElementById('debt-favor-count').textContent = favor.length+' deuda'+(favor.length===1?'':'s');
+  document.getElementById('debt-contra').textContent = fmt(totalContra);
+  document.getElementById('debt-contra-count').textContent = contra.length+' deuda'+(contra.length===1?'':'s');
+  document.getElementById('debt-net').textContent = fmt(net);
+  document.getElementById('debt-net').style.color = net>=0?'var(--green)':'var(--red)';
+  document.getElementById('debt-net-sub').textContent = net>=0?'A tu favor':'En tu contra';
 
   const el = document.getElementById('debts-list');
-  if (!active.length) { el.innerHTML = '<div class="empty-state">Sin deudas pendientes 🎉</div>'; return; }
+  if (!debts.length) { el.innerHTML='<div class="empty-state">Sin deudas registradas</div>'; return; }
 
-  const sorted = [...active].sort((a,b) => {
-    if (!a.due) return 1; if (!b.due) return -1;
-    return new Date(a.due) - new Date(b.due);
+  const sorted = [...debts].sort((a,b)=>{
+    if(!a.due&&!b.due) return 0; if(!a.due) return 1; if(!b.due) return -1;
+    return new Date(a.due)-new Date(b.due);
   });
 
-  el.innerHTML = sorted.map(d => {
+  el.innerHTML = sorted.map((d,i)=>{
+    const idx = debts.indexOf(d);
     const status = debtDueStatus(d.due);
-    return `<div class="debt-card">
+    const createdStr = new Date(d.created+'T12:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'short',year:'numeric'});
+    const actionLabel = d.type==='favor' ? '✓ Cobrado' : '✓ Pagado';
+    return `<div class="debt-card ${d.type}">
       <div class="debt-head">
         <div>
+          <span class="debt-type-badge ${d.type}">${d.type==='favor'?'Me deben':'Yo debo'}</span>
           <div class="debt-name">${d.name}</div>
-          ${d.reason ? `<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.reason}</div>` : ''}
+          ${d.reason?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.reason}</div>`:''}
         </div>
-        <div class="debt-amount">${fmt(d.amount)}</div>
+        <div class="debt-amount ${d.type}">${fmt(d.amount)}</div>
       </div>
-      <span class="debt-due ${status.cls}">${status.label}</span>
+      <div class="debt-meta">
+        <span>Desde ${createdStr}</span>
+        <span class="debt-due ${status.cls}">${status.label}</span>
+      </div>
       <div class="debt-actions">
-        <button class="debt-paid-btn" onclick="markDebtPaid(${d.id})">✓ Cobrado</button>
+        <button class="debt-paid-btn" onclick="openSettle(${idx})">${actionLabel}</button>
         <button class="debt-del-btn" onclick="deleteDebt(${d.id})">Eliminar</button>
       </div>
     </div>`;
