@@ -573,16 +573,30 @@ select.form-input option { background: #1a1f38; }
       <button class="type-btn expense active" id="btn-expense" onclick="setType('expense')">Gasto</button>
       <button class="type-btn income" id="btn-income" onclick="setType('income')">Ingreso</button>
     </div>
-    <div class="form-label" style="margin-bottom:8px">Categoría</div>
-    <div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
-    <div class="form-row">
-      <div class="form-group" style="flex:2">
-        <label class="form-label">O escribe una nueva</label>
-        <input class="form-input" id="f-cat" placeholder="Ej: Almuerzo, Uber...">
+    <div id="cat-section">
+      <div class="form-label" style="margin-bottom:8px">Categoría</div>
+      <div id="cat-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">O escribe una nueva</label>
+          <input class="form-input" id="f-cat" placeholder="Ej: Almuerzo, Uber...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monto (S/)</label>
+          <input class="form-input" id="f-amount" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+        </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Monto (S/)</label>
-        <input class="form-input" id="f-amount" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+    </div>
+    <div id="income-section" style="display:none">
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">Concepto (opcional)</label>
+          <input class="form-input" id="f-concept" placeholder="Ej: Sueldo, Freelance...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monto (S/)</label>
+          <input class="form-input" id="f-amount-income" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+        </div>
       </div>
     </div>
     <div class="form-row">
@@ -745,6 +759,8 @@ function setType(t) {
   txType = t;
   document.getElementById('btn-expense').className='type-btn expense'+(t==='expense'?' active':'');
   document.getElementById('btn-income').className='type-btn income'+(t==='income'?' active':'');
+  document.getElementById('cat-section').style.display = t==='expense' ? '' : 'none';
+  document.getElementById('income-section').style.display = t==='income' ? '' : 'none';
 }
 
 function openAddTx(type) {
@@ -825,18 +841,27 @@ function renderHomeCards() {
 
 // TRANSACTIONS
 function addTx() {
-  const cat=document.getElementById('f-cat').value.trim();
-  const amount=parseFloat(document.getElementById('f-amount').value);
-  const date=document.getElementById('f-date').value;
-  const note=document.getElementById('f-note').value.trim();
-  const accountId=document.getElementById('f-account').value;
-  if(!cat||isNaN(amount)||amount<=0||!date){alert('Completa categoría, monto y fecha.');return;}
-  const accId=accountId?parseInt(accountId):null;
-  transactions.unshift({type:txType,category:cat,amount,date,note,accountId:accId,id:Date.now()});
-  if(accId){const acc=accounts.find(a=>a.id===accId);if(acc)acc.balance+=(txType==='income'?amount:-amount);}
+  const isIncome = txType === 'income';
+  const cat = isIncome
+    ? (document.getElementById('f-concept').value.trim() || 'Ingreso')
+    : document.getElementById('f-cat').value.trim();
+  const amount = parseFloat(isIncome
+    ? document.getElementById('f-amount-income').value
+    : document.getElementById('f-amount').value);
+  const date = document.getElementById('f-date').value;
+  const note = document.getElementById('f-note').value.trim();
+  const accountId = document.getElementById('f-account').value;
+  if (!isIncome && !cat) { alert('Completa la categoría.'); return; }
+  if (isNaN(amount) || amount <= 0) { alert('Ingresa un monto válido.'); return; }
+  if (!date) { alert('Selecciona una fecha.'); return; }
+  const accId = accountId ? parseInt(accountId) : null;
+  transactions.unshift({type:txType, category:cat, amount, date, note, accountId:accId, id:Date.now()});
+  if (accId) { const acc=accounts.find(a=>a.id===accId); if(acc) acc.balance+=(txType==='income'?amount:-amount); }
   save();
   document.getElementById('f-cat').value='';
   document.getElementById('f-amount').value='';
+  document.getElementById('f-concept').value='';
+  document.getElementById('f-amount-income').value='';
   document.getElementById('f-note').value='';
   document.getElementById('add-tx-modal').classList.remove('open');
   updateAll();
