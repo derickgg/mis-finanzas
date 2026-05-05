@@ -540,7 +540,8 @@ function confirmAdjust() {
 function renderWallet() {
   const total = accounts.reduce((s,a) => s + a.balance, 0);
   const totalDebt = debts.filter(d=>d.type==='contra').reduce((s,d)=>s+d.amount,0);
-  const available = total - totalDebt;
+  const totalFavor = debts.filter(d=>d.type==='favor').reduce((s,d)=>s+d.amount,0);
+  const available = total + totalFavor - totalDebt;
   document.getElementById('wallet-total').textContent = fmt(total);
   document.getElementById('wallet-available').textContent = fmt(available);
   document.getElementById('wallet-available').style.color = available>=0?'var(--green)':'var(--red)';
