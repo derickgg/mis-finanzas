@@ -39,6 +39,20 @@
     --text3: #9090a8; --blue: #3a3aee; --blue2: #3a3aee;
     --green: #2a9a5a; --green-dim: #eaf5f0; --green-border: #b0ddc0;
     --red: #a04040; --red-dim: #f5eaea; --red-border: #ddb0b0; --amber: #a07040;
+    --nav-bg: rgba(245,245,247,0.92);
+    --nav-border: #d8d8e0;
+    --nav-icon: #909098;
+    --nav-active: #0a0a12;
+    --nav-btn-border: #0d0d0f;
+    --row-border: #e8e8f0;
+    --badge-bg: #f0f0f5;
+    --badge-border: #d8d8e8;
+    --input-bg: #f0f0f5;
+    --input-border: #d8d8e8;
+    --pill-green-bg: #e8f5ef;
+    --pill-green-border: #b0d8c0;
+    --pill-red-bg: #f5e8e8;
+    --pill-red-border: #d8b0b0;
   }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -47,6 +61,45 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 
 /* BOTTOM NAV */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: rgba(13,13,15,0.92); border-top: 0.5px solid #1e1e24; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+@media (prefers-color-scheme: light) {
+  .bottom-nav { background: rgba(245,245,247,0.94); border-top-color: #d8d8e0; }
+  .nav-item { color: #909098; }
+  .nav-item.active { color: #0a0a12; }
+  .nav-add { border-color: #f5f5f7; }
+  .tx-item { border-bottom-color: #e8e8f0; }
+  .prestamo-tx-row { border-bottom-color: #e8e8f0; }
+  .prestamo-person-group { border-top-color: #e8e8f0; }
+  .prestamo-total-card { background: #ffffff; }
+  .bank-tag.interbank { background: #e8f0f8; color: #2a5a8a; }
+  .bank-tag.bcp { background: #e8f5f0; color: #1a6a50; }
+  .bank-tag.bbva { background: #e8e8f8; color: #3a3a8a; }
+  .bank-tag.efectivo { background: #f5f0e0; color: #6a5a20; }
+  .bank-tag.default { background: #f0f0f8; color: #606080; }
+  .pill.green { background: #e8f5ef; border-color: #b0d8c0; color: #2a7a50; }
+  .pill.red { background: #f5e8e8; border-color: #d8b0b0; color: #804040; }
+  .cat-group-header { border-top-color: #e8e8f0; }
+  .topbar-badge { background: #f0f0f8; color: #606080; border-color: #d8d8e8; }
+  .form-input { background: #f0f0f8; border-color: #d8d8e8; color: #0a0a12; }
+  .form-input::placeholder { color: #b0b0c0; }
+  .type-btn.active.expense { background: #f5e8e8; color: #804040; }
+  .type-btn.active.income { background: #e8f5ef; color: #2a7a50; }
+  .debt-toggle-btn.active.favor { background: #e8f5ef; color: #2a7a50; }
+  .debt-toggle-btn.active.contra { background: #f5e8e8; color: #804040; }
+  .cat-chip { background: #f0f0f8; border-color: #d8d8e8; color: #606080; }
+  .cat-chip.selected { background: #3a3aee; color: #fff; border-color: #3a3aee; }
+  .modal { background: #ffffff; }
+  .modal-handle { background: #d8d8e8; }
+  .wallet-hero { background: #ffffff; border-color: #e0e0e8; }
+  .stat-card { background: #ffffff; border-color: #e0e0e8; }
+  .chart-card { background: #ffffff; border-color: #e0e0e8; }
+  .form-section { background: #ffffff; border-color: #e0e0e8; }
+  .goal-card { background: #ffffff; border-color: #e0e0e8; }
+  .debt-card { background: #ffffff; border-color: #e0e0e8; }
+  .guide-card { background: #ffffff; border-color: #e0e0e8; }
+  .tx-view-btn.active { background: #ffffff; color: #0a0a12; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+}
+
+/* NAV BASE */
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 16px; border: none; background: none; color: #5a5a72; font-family: inherit; transition: color .2s; }
 .nav-item.active { color: #f0f0f5; }
 .nav-icon { width: 22px; height: 22px; }
@@ -306,7 +359,13 @@ select.form-input option { background: #1e1e28; }
 
 <!-- BILLETERA -->
 <div class="page" id="page-wallet">
-  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Cuentas</div><div class="topbar-badge" id="wallet-topbar-total">S/ 0.00</div></div>
+  <div class="topbar">
+    <button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <div class="topbar-title">Cuentas</div>
+    <button onclick="showPage('page-add-account')" style="width:32px;height:32px;border-radius:50%;background:#1e1e28;border:1px solid #2a2a2e;color:#8888a8;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
   <div class="page-content">
     <div class="wallet-hero">
       <div class="wallet-hero-item">
@@ -315,12 +374,21 @@ select.form-input option { background: #1e1e28; }
       </div>
       <div class="wallet-hero-item">
         <div class="wallet-hero-label">Disponible neto</div>
-        <div class="wallet-hero-value" id="wallet-available">S/ 0.00</div>
+        <div class="wallet-hero-value" id="wallet-available" style="color:#4db87a">S/ 0.00</div>
       </div>
     </div>
     <div class="wallet-acc-grid" id="accounts-grid"></div>
+  </div>
+</div>
+
+<!-- AGREGAR CUENTA -->
+<div class="page" id="page-add-account">
+  <div class="topbar">
+    <button class="back-btn" onclick="showPage('page-wallet')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg> Cuentas</button>
+    <div class="topbar-title">Nueva cuenta</div>
+  </div>
+  <div class="page-content">
     <div class="form-section">
-      <div class="form-section-title">Agregar cuenta</div>
       <div class="form-row">
         <div class="form-group" style="flex:2">
           <label class="form-label">Nombre</label>
@@ -344,12 +412,12 @@ select.form-input option { background: #1e1e28; }
         <div class="form-group">
           <label class="form-label">Color</label>
           <select class="form-input" id="ac-color">
-            <option value="#4f6ef7">Azul</option>
-            <option value="#00c896">Verde</option>
-            <option value="#8b5cf6">Morado</option>
-            <option value="#f59e0b">Dorado</option>
-            <option value="#ff4d6a">Rojo</option>
-            <option value="#06b6d4">Cian</option>
+            <option value="#4d8abf">Azul</option>
+            <option value="#3d9980">Verde</option>
+            <option value="#8a8050">Dorado</option>
+            <option value="#5c5cbf">Violeta</option>
+            <option value="#c87070">Rojo</option>
+            <option value="#7a70c8">Morado</option>
           </select>
         </div>
       </div>
@@ -852,6 +920,7 @@ function addAccount() {
   if(!name){alert('Ingresa un nombre.');return;}
   accounts.push({id:Date.now(),name,type,balance,color});
   save(); document.getElementById('ac-name').value=''; document.getElementById('ac-balance').value='';
+  showPage('page-wallet');
   updateAll();
 }
 
