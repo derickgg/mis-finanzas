@@ -291,10 +291,12 @@ select.form-input option { background: #1a1f38; }
   <div class="topbar">
     <button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     <div class="topbar-title">Movimientos</div>
-    <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
-      <button class="tx-view-btn active" id="tfbtn-all" onclick="setTxFilter('all')">Todos</button>
-      <button class="tx-view-btn" id="tfbtn-income" onclick="setTxFilter('income')">Ingresos</button>
-      <button class="tx-view-btn" id="tfbtn-expense" onclick="setTxFilter('expense')">Gastos</button>
+  </div>
+  <div style="display:flex;justify-content:center;padding:0 20px 16px;max-width:600px;margin:0 auto">
+    <div style="display:flex;background:var(--surface2);border-radius:14px;padding:4px;gap:2px;width:100%">
+      <button class="tx-view-btn active" id="tfbtn-all" onclick="setTxFilter('all')" style="flex:1;font-size:15px;padding:10px">Todos</button>
+      <button class="tx-view-btn" id="tfbtn-income" onclick="setTxFilter('income')" style="flex:1;font-size:15px;padding:10px">Ingresos</button>
+      <button class="tx-view-btn" id="tfbtn-expense" onclick="setTxFilter('expense')" style="flex:1;font-size:15px;padding:10px">Gastos</button>
     </div>
   </div>
   <div id="tx-view-toggle" style="display:none;justify-content:center;padding:10px 20px 0;background:var(--bg)">
@@ -1079,19 +1081,55 @@ function addCategoryFromModal() {
 }
 
 
-function openCatDetail(cat) {
+function openCatDetail(cat, isPrestamo) {
   const catObj = categories.find(c=>c.name===cat);
-  const emoji = catObj ? catObj.icon : getCatEmoji(cat);
-  const items = transactions.filter(t=>t.category===cat);
+  let items, title, emoji;
+
+  if (isPrestamo) {
+    // Get all préstamo transactions
+    items = transactions.filter(t => t.category.toLowerCase().startsWith('préstamo') || t.category.toLowerCase().startsWith('prestamo'));
+    title = 'Préstamos';
+    emoji = '🤝';
+  } else {
+    items = transactions.filter(t=>t.category===cat);
+    emoji = catObj ? catObj.icon : getCatEmoji(cat);
+    title = cat;
+  }
+
   const total = items.reduce((s,t)=>s+(t.type==='income'?t.amount:-t.amount),0);
   const totalColor = total>=0?'var(--green)':'var(--red)';
   const sign = total>=0?'+':'-';
 
-  document.getElementById('cat-detail-title').textContent = emoji + ' ' + cat;
+  document.getElementById('cat-detail-title').textContent = emoji + ' ' + title;
   document.getElementById('cat-detail-total').textContent = sign + fmt(Math.abs(total));
   document.getElementById('cat-detail-total').style.color = totalColor;
   document.getElementById('cat-detail-count').textContent = items.length + ' transacción' + (items.length===1?'':'es');
-  document.getElementById('cat-detail-list').innerHTML = items.map(t=>txHTML(t,true)).join('');
+
+  if (isPrestamo) {
+    // Sub-group by person (strip "Préstamo a " prefix)
+    const subGroups = {};
+    items.forEach(t => {
+      const person = t.category.replace(/^[Pp]r[eé]stamo\s+a\s+/i, '').trim() || t.category;
+      if (!subGroups[person]) subGroups[person] = { items: [], total: 0 };
+      subGroups[person].items.push(t);
+      subGroups[person].total += (t.type==='income'?t.amount:-t.amount);
+    });
+    const sorted = Object.keys(subGroups).sort((a,b)=>Math.abs(subGroups[b].total)-Math.abs(subGroups[a].total));
+    document.getElementById('cat-detail-list').innerHTML = '<div>' + sorted.map(person => {
+      const g = subGroups[person];
+      const col = g.total>=0?'var(--green)':'var(--red)';
+      const s = g.total>=0?'+':'-';
+      return '<div style="border-bottom:1px solid var(--border)">' +
+        '<div class="cat-group-header" style="cursor:default">' +
+          '<div class="cat-group-name"><span>👤</span><span>'+person+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
+          '<span class="cat-group-total" style="color:'+col+'">'+s+fmt(Math.abs(g.total))+'</span>' +
+        '</div>' +
+        g.items.map(t=>txHTML(t,true)).join('') +
+      '</div>';
+    }).join('') + '</div>';
+  } else {
+    document.getElementById('cat-detail-list').innerHTML = items.map(t=>txHTML(t,true)).join('');
+  }
 
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-cat-detail').classList.add('active');
@@ -1112,21 +1150,25 @@ function renderTxList() {
   } else if (txView === 'cats') {
     const groups = {};
     filtered.forEach(t => {
-      if (!groups[t.category]) groups[t.category] = { items: [], total: 0 };
-      groups[t.category].items.push(t);
-      groups[t.category].total += (t.type==='income' ? t.amount : -t.amount);
+      // Merge "Préstamo a X" into one "Préstamos" group
+      const isPrestamo = t.category.toLowerCase().startsWith('préstamo') || t.category.toLowerCase().startsWith('prestamo');
+      const key = isPrestamo ? '🤝 Préstamos' : t.category;
+      if (!groups[key]) groups[key] = { items: [], total: 0, isPrestamo };
+      groups[key].items.push(t);
+      groups[key].total += (t.type==='income' ? t.amount : -t.amount);
     });
     const sorted = Object.keys(groups).sort((a,b) => Math.abs(groups[b].total) - Math.abs(groups[a].total));
     el.innerHTML = '<div>' + sorted.map(cat => {
       const g = groups[cat];
       const catObj = categories.find(c=>c.name===cat);
-      const emoji = catObj ? catObj.icon : getCatEmoji(cat);
+      const emoji = g.isPrestamo ? '🤝' : (catObj ? catObj.icon : getCatEmoji(cat));
+      const displayName = g.isPrestamo ? 'Préstamos' : cat;
       const totalColor = g.total >= 0 ? 'var(--green)' : 'var(--red)';
       const sign = g.total >= 0 ? '+' : '-';
       const safeCat = cat.replace(/'/g, "\\'");
       return '<div class="cat-group-item">' +
-        '<div class="cat-group-header" onclick="openCatDetail(\''+safeCat+'\')" style="cursor:pointer">' +
-          '<div class="cat-group-name"><span>'+emoji+'</span><span>'+cat+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
+        '<div class="cat-group-header" onclick="openCatDetail(\''+safeCat+'\','+g.isPrestamo+')" style="cursor:pointer">' +
+          '<div class="cat-group-name"><span>'+emoji+'</span><span>'+displayName+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
           '<div class="cat-group-right">' +
             '<span class="cat-group-total" style="color:'+totalColor+'">'+sign+fmt(Math.abs(g.total))+'</span>' +
             '<svg style="width:16px;height:16px;color:var(--text3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
