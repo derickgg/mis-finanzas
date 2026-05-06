@@ -11,18 +11,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #060712;
-  --bg2: #0d1024;
-  --surface: #131629;
-  --surface2: #1a1f38;
-  --surface3: #222840;
-  --border: rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.12);
-  --text: #ffffff;
-  --text2: rgba(255,255,255,0.55);
-  --text3: rgba(255,255,255,0.25);
-  --blue: #4f6ef7;
-  --blue2: #6c85ff;
+  --bg: #0d0d0f;
+  --bg2: #111114;
+  --surface: #16161a;
+  --surface2: #1e1e24;
+  --surface3: #26262e;
+  --border: #1e1e24;
+  --border2: rgba(255,255,255,0.1);
+  --text: #f0f0f5;
+  --text2: #8888a8;
+  --text3: #5a5a72;
+  --blue: #4a4aff;
+  --blue2: #7b7bff;
   --green: #00c896;
   --green-dim: rgba(0,200,150,0.12);
   --red: #ff4d6a;
@@ -32,6 +32,7 @@
   --radius: 20px;
   --radius-sm: 12px;
   --radius-xs: 8px;
+  --font: -apple-system, 'SF Pro Display', 'Inter', sans-serif;
 }
 @media (prefers-color-scheme: light) {
   :root {
@@ -57,15 +58,15 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { background: var(--bg); }
-body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: calc(80px + env(safe-area-inset-bottom)); overflow-x: hidden; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: calc(80px + env(safe-area-inset-bottom)); overflow-x: hidden; }
 
 /* BOTTOM NAV */
-.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid var(--border2); padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 16px; border: none; background: none; color: var(--text3); font-family: inherit; transition: color .2s; }
-.nav-item.active { color: var(--blue2); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: transparent; border-top: 0.5px solid #1e1e24; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 4px 16px; border: none; background: none; color: #5a5a72; font-family: inherit; transition: color .2s; }
+.nav-item.active { color: #f0f0f5; }
 .nav-icon { width: 22px; height: 22px; }
-.nav-label { font-size: 10px; font-weight: 500; letter-spacing: .02em; }
-.nav-add { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; border: none; cursor: pointer; margin-top: -20px; box-shadow: 0 4px 20px rgba(79,110,247,0.5); }
+.nav-label { font-size: 10px; font-weight: 400; letter-spacing: .02em; }
+.nav-add { width: 48px; height: 48px; border-radius: 50%; background: #4a4aff; display: flex; align-items: center; justify-content: center; color: #fff; border: 3px solid var(--bg); cursor: pointer; margin-top: -20px; box-shadow: 0 4px 16px rgba(74,74,255,0.4); }
 
 /* CONTENT */
 .page { display: none; min-height: calc(100vh - 80px); }
@@ -78,7 +79,36 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .topbar-badge { font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: var(--surface2); color: var(--text2); border: 1px solid var(--border); white-space: nowrap; }
 .topbar-badge.green { background: var(--green-dim); color: var(--green); border-color: transparent; }
 .topbar-badge.red { background: var(--red-dim); color: var(--red); border-color: transparent; }
-.back-btn { background:none;border:none;cursor:pointer;display:flex;align-items:center;color:var(--blue2);font-family:inherit;font-size:15px;font-weight:500;padding:0;flex-shrink:0; }
+.back-btn { background:none;border:none;cursor:pointer;display:flex;align-items:center;color:#6b6b80;font-family:inherit;font-size:13px;font-weight:400;padding:0;flex-shrink:0;gap:4px; }
+
+/* PRÉSTAMOS DETAIL */
+.prestamo-total-card { background: var(--surface); border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 24px; }
+.prestamo-total-label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #5a5a72; margin-bottom: 12px; }
+.prestamo-total-amount { font-size: 42px; font-weight: 300; color: #f0f0f5; line-height: 1; margin-bottom: 10px; }
+.prestamo-total-amount span { color: #8888a8; font-size: 28px; }
+.prestamo-meta { font-size: 12px; color: #5a5a72; display: flex; gap: 12px; justify-content: center; }
+.prestamo-meta-dot { color: #2e2e38; }
+.prestamo-person-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 0 8px; }
+.prestamo-person-name { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: #5a5a72; }
+.prestamo-person-total { font-size: 14px; font-weight: 600; color: #c87070; }
+.prestamo-person-group { border-top: 0.5px solid #1e1e24; }
+.prestamo-person-group:first-child { border-top: none; }
+
+/* TX ROW IN PRESTAMOS */
+.prestamo-tx-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid #1e1e24; }
+.prestamo-tx-row:last-child { border-bottom: none; }
+.prestamo-tx-info { flex: 1; min-width: 0; }
+.prestamo-tx-name { font-size: 14px; font-weight: 400; color: #d0d0e0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prestamo-tx-sub { font-size: 11px; color: #5a5a72; margin-top: 3px; display: flex; gap: 6px; align-items: center; }
+.prestamo-tx-amount { font-size: 14px; font-weight: 500; color: #8888a8; flex-shrink: 0; }
+.bank-tag { border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 500; }
+.bank-tag.interbank { background: #1a2535; color: #4d8abf; }
+.bank-tag.bcp { background: #1a2828; color: #3d9980; }
+.bank-tag.bbva { background: #1a1a35; color: #5c5cbf; }
+.bank-tag.efectivo { background: #252520; color: #8a8050; }
+.bank-tag.default { background: var(--surface2); color: var(--text2); }
+
+
 
 /* HOME HERO */
 .hero { padding: 8px 20px 28px; max-width: 600px; margin: 0 auto; text-align: center; }
@@ -314,18 +344,14 @@ select.form-input option { background: #1a1f38; }
 <!-- CATEGORIA DETALLE -->
 <div class="page" id="page-cat-detail">
   <div class="topbar">
-    <button onclick="showPage('page-tx')" style="background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--blue2);font-family:inherit;font-size:15px;font-weight:500;padding:0">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    <button onclick="showPage('page-tx')" class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
       Movimientos
     </button>
-    <div class="topbar-title" id="cat-detail-title" style="position:absolute;left:50%;transform:translateX(-50%)"></div>
+    <div class="topbar-title" id="cat-detail-title" style="font-size:18px;font-weight:600"></div>
   </div>
   <div class="page-content">
-    <div class="stat-card" style="margin-bottom:16px;text-align:center">
-      <div class="stat-label">Total</div>
-      <div class="stat-value" id="cat-detail-total">S/ 0</div>
-      <div class="stat-sub" id="cat-detail-count"></div>
-    </div>
+    <div id="cat-detail-summary"></div>
     <div id="cat-detail-list"></div>
   </div>
 </div>
@@ -1081,32 +1107,35 @@ function addCategoryFromModal() {
 }
 
 
+function getBankTagClass(name) {
+  if (!name) return 'default';
+  const n = name.toLowerCase();
+  if (n.includes('interbank')) return 'interbank';
+  if (n.includes('bcp')) return 'bcp';
+  if (n.includes('bbva')) return 'bbva';
+  if (n.includes('efectivo')) return 'efectivo';
+  return 'default';
+}
+
 function openCatDetail(cat, isPrestamo) {
   const catObj = categories.find(c=>c.name===cat);
   let items, title, emoji;
 
   if (isPrestamo) {
-    // Get all préstamo transactions
     items = transactions.filter(t => t.category.toLowerCase().startsWith('préstamo') || t.category.toLowerCase().startsWith('prestamo'));
     title = 'Préstamos';
-    emoji = '🤝';
+    emoji = '';
   } else {
     items = transactions.filter(t=>t.category===cat);
-    emoji = catObj ? catObj.icon : getCatEmoji(cat);
+    emoji = catObj ? catObj.icon + ' ' : '';
     title = cat;
   }
 
   const total = items.reduce((s,t)=>s+(t.type==='income'?t.amount:-t.amount),0);
-  const totalColor = total>=0?'var(--green)':'var(--red)';
-  const sign = total>=0?'+':'-';
-
-  document.getElementById('cat-detail-title').textContent = emoji + ' ' + title;
-  document.getElementById('cat-detail-total').textContent = sign + fmt(Math.abs(total));
-  document.getElementById('cat-detail-total').style.color = totalColor;
-  document.getElementById('cat-detail-count').textContent = items.length + ' transacción' + (items.length===1?'':'es');
+  document.getElementById('cat-detail-title').textContent = title;
 
   if (isPrestamo) {
-    // Sub-group by person (strip "Préstamo a " prefix)
+    // Build sub-groups by person
     const subGroups = {};
     items.forEach(t => {
       const person = t.category.replace(/^[Pp]r[eé]stamo\s+a\s+/i, '').trim() || t.category;
@@ -1114,20 +1143,63 @@ function openCatDetail(cat, isPrestamo) {
       subGroups[person].items.push(t);
       subGroups[person].total += (t.type==='income'?t.amount:-t.amount);
     });
-    const sorted = Object.keys(subGroups).sort((a,b)=>Math.abs(subGroups[b].total)-Math.abs(subGroups[a].total));
-    document.getElementById('cat-detail-list').innerHTML = '<div>' + sorted.map(person => {
-      const g = subGroups[person];
-      const col = g.total>=0?'var(--green)':'var(--red)';
-      const s = g.total>=0?'+':'-';
-      return '<div style="border-bottom:1px solid var(--border)">' +
-        '<div class="cat-group-header" style="cursor:default">' +
-          '<div class="cat-group-name"><span>👤</span><span>'+person+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
-          '<span class="cat-group-total" style="color:'+col+'">'+s+fmt(Math.abs(g.total))+'</span>' +
+    const persons = Object.keys(subGroups);
+    const absTotal = Math.abs(total);
+
+    // Summary card
+    document.getElementById('cat-detail-summary').innerHTML =
+      '<div class="prestamo-total-card">' +
+        '<div class="prestamo-total-label">Total prestado</div>' +
+        '<div class="prestamo-total-amount"><span>S/ </span>' + absTotal.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div>' +
+        '<div class="prestamo-meta">' +
+          '<span>'+items.length+' transac.</span>' +
+          '<span class="prestamo-meta-dot">·</span>' +
+          '<span>'+persons.length+' persona'+(persons.length===1?'':'s')+'</span>' +
+          '<span class="prestamo-meta-dot">·</span>' +
+          '<span>'+new Date().toLocaleDateString('es-PE',{month:'short',year:'numeric'})+'</span>' +
         '</div>' +
-        g.items.map(t=>txHTML(t,true,true)).join('') +
       '</div>';
-    }).join('') + '</div>';
+
+    const sorted = Object.keys(subGroups).sort((a,b)=>Math.abs(subGroups[b].total)-Math.abs(subGroups[a].total));
+    document.getElementById('cat-detail-list').innerHTML = sorted.map(person => {
+      const g = subGroups[person];
+      const absAmt = Math.abs(g.total);
+      return '<div class="prestamo-person-group">' +
+        '<div class="prestamo-person-header">' +
+          '<span class="prestamo-person-name">'+person+' · '+g.items.length+' mov.</span>' +
+          '<span class="prestamo-person-total">S/ '+absAmt.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</span>' +
+        '</div>' +
+        g.items.map(t => {
+          const acc = t.accountId ? accounts.find(a=>a.id===t.accountId) : null;
+          const bankClass = getBankTagClass(acc ? acc.name : '');
+          const bankTag = acc ? '<span class="bank-tag '+bankClass+'">'+acc.name+'</span>' : '';
+          const d = new Date(t.date+'T12:00:00');
+          const dateStr = d.toLocaleDateString('es-PE',{day:'numeric',month:'short'});
+          const note = t.note ? ' · <span style="color:#5a5a72">'+t.note+'</span>' : '';
+          return '<div class="prestamo-tx-row">' +
+            '<div class="prestamo-tx-info">' +
+              '<div class="prestamo-tx-name">'+t.category+note+'</div>' +
+              '<div class="prestamo-tx-sub">'+dateStr+' '+bankTag+'</div>' +
+            '</div>' +
+            '<div style="display:flex;align-items:center;gap:8px">' +
+              '<span class="prestamo-tx-amount">S/ '+t.amount.toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</span>' +
+              '<button class="tx-chevron" onclick="openTxDetail('+t.id+')">' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5a5a72" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+              '</button>' +
+            '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+    }).join('');
   } else {
+    const sign = total>=0?'+':'-';
+    const totalColor = total>=0?'var(--green)':'var(--red)';
+    document.getElementById('cat-detail-summary').innerHTML =
+      '<div class="stat-card" style="margin-bottom:16px;text-align:center">' +
+        '<div class="stat-label">Total</div>' +
+        '<div class="stat-value" style="color:'+totalColor+'">'+sign+fmt(Math.abs(total))+'</div>' +
+        '<div class="stat-sub">'+items.length+' transacción'+(items.length===1?'':'es')+'</div>' +
+      '</div>';
     document.getElementById('cat-detail-list').innerHTML = items.map(t=>txHTML(t,true)).join('');
   }
 
