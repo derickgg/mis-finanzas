@@ -225,7 +225,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 .tx-del-btn { background: none; border: none; color: #5a5a72; cursor: pointer; padding: 4px; font-size: 13px; }
 
 /* BANK TAGS */
-.bank-tag { border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 500; }
+.bank-tag { border-radius: 5px; padding: 2px 7px; font-size: 10px; font-weight: 500; border: none; }
 .bank-tag.interbank { background: #1a2535; color: #4d8abf; }
 .bank-tag.bcp { background: #1a2828; color: #3d9980; }
 .bank-tag.bbva { background: #1a1a35; color: #5c5cbf; }
@@ -1336,7 +1336,7 @@ function openCatDetail(cat, isPrestamo) {
     document.getElementById('cat-detail-summary').innerHTML =
       '<div class="stat-card" style="margin-bottom:16px;text-align:center">' +
         '<div class="stat-label">Total</div>' +
-        '<div class="stat-value" style="color:'+totalColor+'">'+sign+fmt(Math.abs(total))+'</div>' +
+        '<div class="stat-value" style="color:'+totalColor+'">'+sign+'S/ '+Math.abs(total).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div>' +
         '<div class="stat-sub">'+items.length+' transacción'+(items.length===1?'':'es')+'</div>' +
       '</div>';
     document.getElementById('cat-detail-list').innerHTML = items.map(t=>txHTML(t,true)).join('');
@@ -1399,14 +1399,14 @@ function renderTxList() {
       const emoji = g.isPrestamo ? '🤝' : (catObj ? catObj.icon : getCatEmoji(cat));
       const displayName = g.isPrestamo ? 'Préstamos' : cat;
       const totalColor = g.total >= 0 ? '#4db87a' : '#c87070';
-      const sign = g.total >= 0 ? '+S/ ' : 'S/ ';
+      const amt = Math.abs(g.total).toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
       const safeCat = cat.replace(/'/g, "\\'");
       return '<div class="cat-group-item">' +
         '<div class="cat-group-header" onclick="openCatDetail(\''+safeCat+'\','+g.isPrestamo+')" style="cursor:pointer">' +
           '<div class="cat-group-name"><span>'+emoji+'</span><span>'+displayName+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
           '<div class="cat-group-right">' +
-            '<span class="cat-group-total" style="color:'+totalColor+'">'+sign+fmt(Math.abs(g.total))+'</span>' +
-            '<svg style="width:16px;height:16px;color:var(--text3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+            '<span class="cat-group-total" style="color:'+totalColor+'">S/ '+amt+'</span>' +
+            '<svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="#ABABBC" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
           '</div>' +
         '</div>' +
       '</div>';
