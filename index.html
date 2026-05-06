@@ -73,10 +73,12 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
 .page-content { padding: 0 20px 20px; max-width: 600px; margin: 0 auto; }
 
 /* TOPBAR */
-.topbar { padding: 56px 20px 20px; max-width: 600px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-.topbar-title { font-size: 17px; font-weight: 600; color: var(--text); }
-.topbar-month { font-size: 13px; color: var(--text2); }
-.topbar-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+.topbar { padding: 52px 20px 14px; max-width: 600px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.topbar-title { font-size: 20px; font-weight: 700; color: var(--text); flex: 1; letter-spacing: -.3px; }
+.topbar-badge { font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: var(--surface2); color: var(--text2); border: 1px solid var(--border); white-space: nowrap; }
+.topbar-badge.green { background: var(--green-dim); color: var(--green); border-color: transparent; }
+.topbar-badge.red { background: var(--red-dim); color: var(--red); border-color: transparent; }
+.back-btn { background:none;border:none;cursor:pointer;display:flex;align-items:center;color:var(--blue2);font-family:inherit;font-size:15px;font-weight:500;padding:0;flex-shrink:0; }
 
 /* HOME HERO */
 .hero { padding: 8px 20px 28px; max-width: 600px; margin: 0 auto; text-align: center; }
@@ -262,10 +264,8 @@ select.form-input option { background: #1a1f38; }
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div class="topbar">
-    <div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:2px" id="current-month-label"></div>
-      <div class="topbar-title">Mis finanzas</div>
-    </div>
+    <div class="topbar-title">Cash Flow</div>
+    <div class="topbar-badge" id="current-month-label"></div>
   </div>
 
   <div class="hero">
@@ -289,7 +289,7 @@ select.form-input option { background: #1a1f38; }
 <!-- TRANSACCIONES -->
 <div class="page" id="page-tx">
   <div class="topbar">
-    <button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     <div class="topbar-title">Movimientos</div>
     <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
       <button class="tx-view-btn active" id="tfbtn-all" onclick="setTxFilter('all')">Todos</button>
@@ -330,7 +330,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- BILLETERA -->
 <div class="page" id="page-wallet">
-  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Billetera</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Cuentas</div><div class="topbar-badge" id="wallet-topbar-total">S/ 0.00</div></div>
   <div class="page-content">
     <div class="wallet-hero">
       <div class="wallet-hero-item">
@@ -384,7 +384,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- GRÁFICOS / METAS -->
 <div class="page" id="page-stats">
-  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Estadísticas</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Estadísticas</div><div class="topbar-badge" id="stats-topbar-month"></div></div>
   <div class="page-content">
     <div class="stat-grid">
       <div class="stat-card">
@@ -453,7 +453,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- DEUDAS -->
 <div class="page" id="page-debts">
-  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Deudas</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Deudas</div><div class="topbar-badge" id="debts-topbar-net">S/ 0.00</div></div>
   <div class="page-content">
     <div class="debt-summary">
       <div class="stat-card">
@@ -471,46 +471,6 @@ select.form-input option { background: #1a1f38; }
         <div class="stat-value" id="debt-net" style="font-size:22px">S/ 0</div>
         <div class="stat-sub" id="debt-net-sub">—</div>
       </div>
-    </div>
-    <div class="form-section">
-      <div class="form-section-title">Registrar deuda</div>
-      <div class="debt-toggle">
-        <button class="debt-toggle-btn favor active" id="dbtn-favor" onclick="setDebtType('favor')">Me deben</button>
-        <button class="debt-toggle-btn contra" id="dbtn-contra" onclick="setDebtType('contra')">Yo debo</button>
-      </div>
-      <div class="form-row">
-        <div class="form-group" style="flex:2">
-          <label class="form-label" id="d-name-label">¿Quién te debe?</label>
-          <input class="form-input" id="d-name" placeholder="Nombre...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Monto (S/)</label>
-          <input class="form-input" id="d-amount" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Motivo (opcional)</label>
-          <input class="form-input" id="d-reason" placeholder="Ej: Almuerzo...">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Fecha de generación</label>
-          <input class="form-input" id="d-created" type="date">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Fecha límite (opcional)</label>
-          <input class="form-input" id="d-due" type="date">
-        </div>
-      </div>
-      <div class="form-row" id="d-source-row">
-        <div class="form-group">
-          <label class="form-label">¿De qué cuenta salió?</label>
-          <select class="form-input" id="d-source-account"><option value="">Sin cuenta</option></select>
-        </div>
-      </div>
-      <button class="btn-primary" onclick="addDebt()">Registrar deuda</button>
     </div>
     <div id="debts-list"></div>
   </div>
@@ -550,16 +510,16 @@ select.form-input option { background: #1a1f38; }
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
     <div class="nav-label">Cuentas</div>
   </button>
-  <button class="nav-add" onclick="openAddTx('expense')">
+  <button class="nav-add" onclick="openTypeSelector()">
     <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-  </button>
-  <button class="nav-item" onclick="showPage('page-debts',this)" id="nav-debts">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-    <div class="nav-label">Deudas</div>
   </button>
   <button class="nav-item" onclick="showPage('page-stats',this);updateCharts()" id="nav-stats">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     <div class="nav-label">Stats</div>
+  </button>
+  <button class="nav-item" onclick="showPage('page-debts',this)" id="nav-debts">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    <div class="nav-label">Deudas</div>
   </button>
 </nav>
 
@@ -615,6 +575,70 @@ select.form-input option { background: #1a1f38; }
       </div>
     </div>
     <button class="btn-primary" onclick="addTx()">Agregar</button>
+  </div>
+</div>
+
+<!-- MODAL TIPO -->
+<div class="modal-overlay" id="type-selector-modal" onclick="closeMod(event,'type-selector-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">¿Qué quieres registrar?</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+      <button class="btn-primary" style="display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,106,0.2)" onclick="closeMod2('type-selector-modal');openAddTx('expense')">
+        <span style="font-size:22px">↓</span><div><div style="font-weight:700">Gasto</div><div style="font-size:12px;opacity:.7;font-weight:400">Registrar un pago o compra</div></div>
+      </button>
+      <button class="btn-primary" style="display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;background:var(--green-dim);color:var(--green);border:1px solid rgba(0,200,150,0.2)" onclick="closeMod2('type-selector-modal');openAddTx('income')">
+        <span style="font-size:22px">↑</span><div><div style="font-weight:700">Ingreso</div><div style="font-size:12px;opacity:.7;font-weight:400">Registrar dinero recibido</div></div>
+      </button>
+      <button class="btn-primary" style="display:flex;align-items:center;gap:12px;text-align:left;justify-content:flex-start;background:var(--surface2);color:var(--text);border:1px solid var(--border2)" onclick="closeMod2('type-selector-modal');openDebtForm()">
+        <span style="font-size:22px">⇌</span><div><div style="font-weight:700">Deuda</div><div style="font-size:12px;opacity:.7;font-weight:400">Registrar lo que te deben o debes</div></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL REGISTRAR DEUDA -->
+<div class="modal-overlay" id="debt-form-modal" onclick="closeMod(event,'debt-form-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Registrar deuda</div>
+    <div class="debt-toggle">
+      <button class="debt-toggle-btn favor active" id="dbtn-favor" onclick="setDebtType('favor')">Me deben</button>
+      <button class="debt-toggle-btn contra" id="dbtn-contra" onclick="setDebtType('contra')">Yo debo</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label class="form-label" id="d-name-label">¿Quién te debe?</label>
+        <input class="form-input" id="d-name" placeholder="Nombre...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Monto (S/)</label>
+        <input class="form-input" id="d-amount" type="number" min="0" step="0.01" placeholder="0.00" inputmode="decimal">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Motivo (opcional)</label>
+        <input class="form-input" id="d-reason" placeholder="Ej: Almuerzo...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha de generación</label>
+        <input class="form-input" id="d-created" type="date">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Fecha límite (opcional)</label>
+        <input class="form-input" id="d-due" type="date">
+      </div>
+    </div>
+    <div class="form-row" id="d-source-row">
+      <div class="form-group">
+        <label class="form-label">¿De qué cuenta salió?</label>
+        <select class="form-input" id="d-source-account"><option value="">Sin cuenta</option></select>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="addDebt()">Registrar deuda</button>
   </div>
 </div>
 
@@ -816,6 +840,20 @@ function setType(t) {
   document.getElementById('income-section').style.display = t==='income' ? '' : 'none';
 }
 
+function openTypeSelector() {
+  document.getElementById('type-selector-modal').classList.add('open');
+}
+
+function closeMod2(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function openDebtForm() {
+  document.getElementById('d-created').value = todayStr();
+  document.getElementById('debt-form-modal').classList.add('open');
+}
+
+
 function openAddTx(type) {
   setType(type||'expense');
   renderCatChips();
@@ -864,6 +902,8 @@ function renderWallet() {
   document.getElementById('wallet-total').textContent=fmt(total);
   document.getElementById('wallet-available').textContent=fmt(available);
   document.getElementById('wallet-available').style.color=available>=0?'var(--green)':'var(--red)';
+  const wtEl = document.getElementById('wallet-topbar-total');
+  if (wtEl) { wtEl.textContent = fmt(total); wtEl.className = 'topbar-badge'; }
 
   const grid=document.getElementById('accounts-grid');
   if(!accounts.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Agrega tu primera cuenta abajo</div>';return;}
@@ -937,17 +977,21 @@ function updateMetrics() {
   const m=getMonthly();
   const income=m.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
   const expense=m.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
-  const balance=income-expense;
-  const total=accounts.reduce((s,a)=>s+a.balance,0);
-  document.getElementById('h-total-balance').textContent=fmt(total);
+  const totalBalance=accounts.reduce((s,a)=>s+a.balance,0);
+  document.getElementById('h-total-balance').textContent=fmt(totalBalance);
   document.getElementById('h-income-pill').textContent='↑ '+fmt(income);
   document.getElementById('h-expense-pill').textContent='↓ '+fmt(expense);
-  // stats page
   document.getElementById('s-income').textContent=fmt(income);
   document.getElementById('s-expense').textContent=fmt(expense);
+  const balance=income-expense;
   document.getElementById('s-balance').textContent=fmt(balance);
   document.getElementById('s-balance').style.color=balance>=0?'var(--green)':'var(--red)';
   document.getElementById('s-balance-sub').textContent=balance>=0?'Superávit este mes':'Déficit este mes';
+  // Stats topbar badge
+  const statsEl = document.getElementById('stats-topbar-month');
+  if (statsEl) statsEl.textContent = new Date().toLocaleDateString('es-PE',{month:'short',year:'numeric'});
+  // Month label
+  document.getElementById('current-month-label').textContent = new Date().toLocaleDateString('es-PE',{month:'long',year:'numeric'});
 }
 
 function txHTML(t, showAction=false) {
@@ -1256,6 +1300,7 @@ function addDebt() {
   document.getElementById('d-name').value='';document.getElementById('d-amount').value='';
   document.getElementById('d-reason').value='';document.getElementById('d-due').value='';
   document.getElementById('d-source-account').value='';
+  document.getElementById('debt-form-modal').classList.remove('open');
   updateAll();
 }
 
@@ -1313,6 +1358,8 @@ function renderDebts() {
   document.getElementById('debt-net').textContent=fmt(net);
   document.getElementById('debt-net').style.color=net>=0?'var(--green)':'var(--red)';
   document.getElementById('debt-net-sub').textContent=net>=0?'A tu favor':'En tu contra';
+  const dtEl = document.getElementById('debts-topbar-net');
+  if (dtEl) { dtEl.textContent=(net>=0?'+ ':'-')+fmt(Math.abs(net)); dtEl.className='topbar-badge '+(net>=0?'green':'red'); }
 
   const el=document.getElementById('debts-list');
   if(!debts.length){el.innerHTML='<div class="empty-state">Sin deudas registradas</div>';return;}
