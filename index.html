@@ -423,7 +423,6 @@ select.form-input option { background: #1e1e28; }
     <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
       <button class="tx-view-btn active" id="tvbtn-list" onclick="setTxView('list')">General</button>
       <button class="tx-view-btn" id="tvbtn-cats" onclick="setTxView('cats')">Categorías</button>
-      <button class="tx-view-btn" id="tvbtn-accs" onclick="setTxView('accs')">Cuenta</button>
     </div>
   </div>
   <div class="page-content">
@@ -1045,7 +1044,6 @@ function renderWallet() {
     <div class="wallet-acc-card" style="background:linear-gradient(135deg,${a.color}dd,${a.color}99);border:none">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:auto">
         <div class="wallet-acc-type" style="color:rgba(255,255,255,0.7)">${TYPE_LABELS[a.type]||a.type}</div>
-        <button onclick="deleteAccount(${a.id})" style="background:rgba(0,0,0,0.2);border:none;border-radius:50%;width:24px;height:24px;color:#fff;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center">✕</button>
       </div>
       <div class="wallet-acc-name" style="color:#fff;font-size:16px;font-weight:700;margin:10px 0 4px">${a.name}</div>
       <div class="wallet-acc-balance" style="color:#fff;font-size:24px;font-weight:700">${fmt(a.balance)}</div>
@@ -1180,7 +1178,6 @@ function setTxFilter(f) {
     txView='list';
     document.getElementById('tvbtn-list').className='tx-view-btn active';
     document.getElementById('tvbtn-cats').className='tx-view-btn';
-    document.getElementById('tvbtn-accs').className='tx-view-btn';
   }
   renderTxList();
 }
@@ -1189,7 +1186,6 @@ function setTxView(v) {
   txView = v;
   document.getElementById('tvbtn-list').className = 'tx-view-btn' + (v==='list'?' active':'');
   document.getElementById('tvbtn-cats').className = 'tx-view-btn' + (v==='cats'?' active':'');
-  document.getElementById('tvbtn-accs').className = 'tx-view-btn' + (v==='accs'?' active':'');
   renderTxList();
 }
 
@@ -1314,9 +1310,33 @@ function openCatDetail(cat, isPrestamo) {
 }
 
 function renderTxList() {
-  document.getElementById('home-tx-list').innerHTML = transactions.slice(0,10).length
-    ? transactions.slice(0,10).map(t=>txHTML(t,false)).join('')
-    : '<div class="empty-state">Agrega tu primera transacción</div>';
+  // HOME: agrupar últimos movimientos por fecha
+  const homeTxs = transactions.slice(0, 30);
+  if (!homeTxs.length) {
+    document.getElementById('home-tx-list').innerHTML = '<div class="empty-state">Agrega tu primera transacción</div>';
+  } else {
+    const byDate = {};
+    homeTxs.forEach(t => {
+      const d = new Date(t.date + 'T12:00:00');
+      const label = d.toLocaleDateString('es-PE', { weekday: 'short', day: 'numeric', month: 'short' });
+      if (!byDate[t.date]) byDate[t.date] = { label, items: [], total: 0 };
+      byDate[t.date].items.push(t);
+      byDate[t.date].total += (t.type === 'income' ? t.amount : -t.amount);
+    });
+    const dateKeys = Object.keys(byDate).sort((a, b) => b.localeCompare(a)).slice(0, 7);
+    document.getElementById('home-tx-list').innerHTML = dateKeys.map(k => {
+      const g = byDate[k];
+      const totalColor = g.total >= 0 ? 'var(--green)' : 'var(--red)';
+      const sign = g.total >= 0 ? '+S/ ' : 'S/ ';
+      return '<div style="margin-bottom:2px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 4px;border-bottom:0.5px solid var(--border2)">' +
+          '<span style="font-size:11px;font-weight:500;color:var(--text2);text-transform:capitalize">' + g.label + '</span>' +
+          '<span style="font-size:11px;font-weight:600;color:' + totalColor + '">' + sign + fmt(Math.abs(g.total)) + '</span>' +
+        '</div>' +
+        g.items.map(t => txHTML(t, false)).join('') +
+      '</div>';
+    }).join('');
+  }
 
   const el = document.getElementById('all-tx-list');
   const filtered = txFilter === 'all' ? transactions : transactions.filter(t => t.type === txFilter);
