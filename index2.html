@@ -52,12 +52,13 @@
   .nav-label { color: inherit !important; }
   .nav-add { border-color: #F5F5F7 !important; }
 
-  /* HERO */
-  .hero-amount { color: #1C1C1E !important; font-weight: 200 !important; }
-  .hero-amount-prefix { color: #6B6B80 !important; }
+  /* HERO — override hardcoded dark styles */
+  .hero-amount { color: #1C1C1E !important; font-weight: 200 !important; -webkit-text-fill-color: #1C1C1E !important; background: none !important; -webkit-background-clip: unset !important; background-clip: unset !important; }
+  .hero-amount-prefix { color: #6B6B80 !important; -webkit-text-fill-color: #6B6B80 !important; }
   .hero-label { color: #6B6B80 !important; }
-  .pill.green { background: #E8F7EF !important; border-color: #B8E8CC !important; color: #2DA866 !important; }
-  .pill.red { background: #FDECEA !important; border-color: #F5C0BC !important; color: #C0504A !important; }
+  /* PILLS — high specificity */
+  .hero-pills .pill.green, .pill.green { background: #E8F7EF !important; border-color: #B8E8CC !important; color: #2DA866 !important; }
+  .hero-pills .pill.red, .pill.red { background: #FDECEA !important; border-color: #F5C0BC !important; color: #C0504A !important; }
 
   /* TOPBAR */
   .topbar-title { color: #1C1C1E !important; }
@@ -71,12 +72,12 @@
   .tx-name { color: #1C1C1E !important; }
   .tx-sub { color: #6B6B80 !important; }
 
-  /* BANK TAGS */
-  .bank-tag.interbank { background: #E8F0F8 !important; color: #2D6A9F !important; }
-  .bank-tag.bcp { background: #E8F5F0 !important; color: #1F7A5C !important; }
-  .bank-tag.bbva { background: #EEEEF8 !important; color: #3D3D9F !important; }
-  .bank-tag.efectivo { background: #F5F0E8 !important; color: #7A6030 !important; }
-  .bank-tag.default { background: #EBEBF0 !important; color: #6B6B80 !important; }
+  /* BANK TAGS — high specificity to beat base dark styles */
+  .tx-item .bank-tag.interbank, .prestamo-tx-row .bank-tag.interbank, .bank-tag.interbank { background: #E8F0F8 !important; color: #2D6A9F !important; border: none !important; }
+  .tx-item .bank-tag.bcp, .prestamo-tx-row .bank-tag.bcp, .bank-tag.bcp { background: #E8F5F0 !important; color: #1F7A5C !important; border: none !important; }
+  .tx-item .bank-tag.bbva, .prestamo-tx-row .bank-tag.bbva, .bank-tag.bbva { background: #EEEEF8 !important; color: #3D3D9F !important; border: none !important; }
+  .tx-item .bank-tag.efectivo, .prestamo-tx-row .bank-tag.efectivo, .bank-tag.efectivo { background: #F5F0E8 !important; color: #7A6030 !important; border: none !important; }
+  .tx-item .bank-tag.default, .prestamo-tx-row .bank-tag.default, .bank-tag.default { background: #EBEBF0 !important; color: #6B6B80 !important; border: none !important; }
 
   /* GROUPS / TABS */
   .cat-group-header { border-top-color: #EBEBF0 !important; }
@@ -179,8 +180,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   .hero-amount { color: #0a0a12; }
   .hero-amount-prefix { color: #606080; }
   .hero-label { color: #606080; }
-  .pill.green { background: #e4f5ec; border-color: #90cca8; color: #1a7040; }
-  .pill.red { background: #f5e4e4; border-color: #cca090; color: #803030; }
+
 
   /* Transactions */
   .tx-item { border-bottom-color: #e0e0e8; }
@@ -188,95 +188,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
   .tx-sub { color: #808098; }
 
   /* Bank tags */
-  .bank-tag.interbank { background: #ddeaf5; color: #1a4a70; }
-  .bank-tag.bcp { background: #ddf0ea; color: #0a5040; }
-  .bank-tag.bbva { background: #ddddf5; color: #2a2a80; }
-  .bank-tag.efectivo { background: #f0ecd8; color: #504010; }
-  .bank-tag.default { background: #e8e8f5; color: #404060; }
 
-  /* Groups */
-  .cat-group-header { border-top-color: #e0e0e8; }
-  .cat-group-name { color: #808098; }
-  .cat-group-count { color: #a0a0b8; }
-  .tx-view-btn { color: #808098; }
-  .tx-view-btn.active { background: #ffffff; color: #0a0a12; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-
-  /* Cards */
-  .stat-card, .chart-card, .form-section, .goal-card, .debt-card, .wallet-hero, .prestamo-total-card { background: #ffffff; border-color: #e0e0e8; }
-  .stat-label, .chart-card-title, .form-section-title, .wallet-hero-label { color: #808098; }
-  .stat-value, .wallet-hero-value { color: #0a0a12; }
-  .stat-sub { color: #808098; }
-
-  /* Topbar */
-  .topbar-title { color: #0a0a12; }
-  .topbar-badge { background: #e8e8f5; color: #404060; border-color: #d0d0e0; }
-  .back-btn { color: #404080; }
-  .section-title { color: #0a0a12; }
-
-  /* Debt cards */
-  .debt-name { color: #0a0a12; }
-  .debt-meta { color: #808098; }
-  .debt-amount.favor { color: #1a7040; }
-  .debt-amount.contra { color: #803030; }
-  .debt-badge.favor { background: #e4f5ec; color: #1a7040; }
-  .debt-badge.contra { background: #f5e4e4; color: #803030; }
-  .debt-due.ok { background: #e4f5ec; color: #1a7040; }
-  .debt-due.soon { background: #f5f0e0; border-color: #d0b060; color: #705010; }
-  .debt-due.overdue { background: #f5e4e4; color: #803030; }
-  .debt-paid-btn { background: #e4f5ec; color: #1a7040; border-color: #90cca8; }
-  .debt-del-btn { background: #f0f0f8; color: #606080; border-color: #d0d0e0; }
-
-  /* Forms */
-  .form-input { background: #f0f0f8; border-color: #d0d0e0; color: #0a0a12; }
-  .form-input::placeholder { color: #b0b0c8; }
-  .form-label { color: #606080; }
-  .type-toggle, .debt-toggle { background: #e8e8f5; }
-  .type-btn, .debt-toggle-btn { color: #808098; }
-  .type-btn.active.expense { background: #f5e4e4; color: #803030; }
-  .type-btn.active.income { background: #e4f5ec; color: #1a7040; }
-  .debt-toggle-btn.active.favor { background: #e4f5ec; color: #1a7040; }
-  .debt-toggle-btn.active.contra { background: #f5e4e4; color: #803030; }
-
-  /* Modals */
-  .modal { background: #ffffff; }
-  .modal-handle { background: #d8d8e8; }
-  .modal-title { color: #0a0a12; }
-
-  /* Cat chips */
-  .cat-chip { background: #f0f0f8; border-color: #d0d0e0; color: #606080; }
-  .cat-chip.selected { background: #3a3aee; color: #fff; border-color: #3a3aee; }
-
-  /* Goals */
-  .goal-name { color: #0a0a12; }
-  .goal-detail { color: #808098; }
-  .goal-bar-bg { background: #e8e8f5; }
-  .goal-dep-btn { background: #e4f5ec; color: #1a7040; border-color: #90cca8; }
-  .goal-del-btn { background: #f0f0f8; color: #606080; border-color: #d0d0e0; }
-
-  /* Préstamos */
-  .prestamo-total-label { color: #808098; }
-  .prestamo-total-amount { color: #0a0a12; }
-  .prestamo-total-amount span { color: #808098; }
-  .prestamo-meta { color: #808098; }
-  .prestamo-person-name { color: #808098; }
-  .prestamo-person-total { color: #803030; }
-  .prestamo-person-group { border-top-color: #e0e0e8; }
-  .prestamo-tx-row { border-bottom-color: #e0e0e8; }
-  .prestamo-tx-name { color: #0a0a12; }
-  .prestamo-tx-sub { color: #808098; }
-  .prestamo-tx-amount { color: #606080; }
-
-  /* Detail */
-  .tx-detail-row { border-bottom-color: #e0e0e8; }
-  .tx-detail-label { color: #808098; }
-  .tx-detail-value { color: #0a0a12; }
-
-  /* Chart legends */
-  .pie-name { color: #0a0a12; }
-  .pie-pct { color: #606080; }
-
-  .empty-state { color: #a0a0b8; }
-}
 
 /* NAV BASE */
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 16px; border: none; background: none; color: #5a5a72; font-family: inherit; transition: color .2s; }
