@@ -32,28 +32,138 @@
   --radius: 20px; --radius-sm: 16px; --radius-xs: 10px;
   --font: -apple-system, 'SF Pro Display', 'Inter', sans-serif;
 }
+
+}
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f5f5f7; --surface: #ffffff; --surface2: #f0f0f5; --surface3: #e5e5ea;
-    --border: #e0e0e8; --border2: #d0d0dc; --text: #0a0a12; --text2: #606080;
-    --text3: #9090a8; --blue: #3a3aee; --blue2: #3a3aee;
-    --green: #2a9a5a; --green-dim: #eaf5f0; --green-border: #b0ddc0;
-    --red: #a04040; --red-dim: #f5eaea; --red-border: #ddb0b0; --amber: #a07040;
-    --nav-bg: rgba(245,245,247,0.92);
-    --nav-border: #d8d8e0;
-    --nav-icon: #909098;
-    --nav-active: #0a0a12;
-    --nav-btn-border: #0d0d0f;
-    --row-border: #e8e8f0;
-    --badge-bg: #f0f0f5;
-    --badge-border: #d8d8e8;
-    --input-bg: #f0f0f5;
-    --input-border: #d8d8e8;
-    --pill-green-bg: #e8f5ef;
-    --pill-green-border: #b0d8c0;
-    --pill-red-bg: #f5e8e8;
-    --pill-red-border: #d8b0b0;
+    --bg: #F5F5F7; --surface: #FFFFFF; --surface2: #F5F5F7; --surface3: #EBEBF0;
+    --border: #E5E5EA; --border2: #EBEBF0;
+    --text: #1C1C1E; --text2: #6B6B80; --text3: #ABABBC;
+    --blue: #4A4AFF; --blue2: #4A4AFF;
+    --green: #2DA866; --green-dim: #E8F7EF; --green-border: #B8E8CC;
+    --red: #C0504A; --red-dim: #FDECEA; --red-border: #F5C0BC;
+    --amber: #A06820;
   }
+
+  /* FONDO Y NAV */
+  .bottom-nav { background: rgba(255,255,255,0.96) !important; border-top-color: #E5E5EA !important; }
+  .nav-item { color: #ABABBC !important; }
+  .nav-item.active { color: #1C1C1E !important; }
+  .nav-label { color: inherit !important; }
+  .nav-add { border-color: #F5F5F7 !important; }
+
+  /* HERO — override hardcoded dark styles */
+  .hero-amount { color: #1C1C1E !important; font-weight: 200 !important; -webkit-text-fill-color: #1C1C1E !important; background: none !important; -webkit-background-clip: unset !important; background-clip: unset !important; }
+  .hero-amount-prefix { color: #6B6B80 !important; -webkit-text-fill-color: #6B6B80 !important; }
+  .hero-label { color: #6B6B80 !important; }
+  /* PILLS — high specificity */
+  .hero-pills .pill.green, .pill.green { background: #E8F7EF !important; border-color: #B8E8CC !important; color: #2DA866 !important; }
+  .hero-pills .pill.red, .pill.red { background: #FDECEA !important; border-color: #F5C0BC !important; color: #C0504A !important; }
+
+  /* TOPBAR */
+  .topbar-title { color: #1C1C1E !important; }
+  .topbar-badge { background: #1C1C1E !important; color: #FFFFFF !important; border-color: #1C1C1E !important; }
+  .back-btn { color: #6B6B80 !important; }
+  .section-title { color: #1C1C1E !important; }
+  .section-link { color: #4A4AFF !important; }
+
+  /* TRANSACCIONES */
+  .tx-item { border-bottom-color: #EBEBF0 !important; }
+  .tx-name { color: #1C1C1E !important; }
+  .tx-sub { color: #6B6B80 !important; }
+
+  /* BANK TAGS — high specificity to beat base dark styles */
+  .tx-item .bank-tag.interbank, .prestamo-tx-row .bank-tag.interbank, .bank-tag.interbank { background: #E8F0F8 !important; color: #2D6A9F !important; border: none !important; }
+  .tx-item .bank-tag.bcp, .prestamo-tx-row .bank-tag.bcp, .bank-tag.bcp { background: #E8F5F0 !important; color: #1F7A5C !important; border: none !important; }
+  .tx-item .bank-tag.bbva, .prestamo-tx-row .bank-tag.bbva, .bank-tag.bbva { background: #EEEEF8 !important; color: #3D3D9F !important; border: none !important; }
+  .tx-item .bank-tag.efectivo, .prestamo-tx-row .bank-tag.efectivo, .bank-tag.efectivo { background: #F5F0E8 !important; color: #7A6030 !important; border: none !important; }
+  .tx-item .bank-tag.default, .prestamo-tx-row .bank-tag.default, .bank-tag.default { background: #EBEBF0 !important; color: #6B6B80 !important; border: none !important; }
+
+  /* GROUPS / TABS */
+  .cat-group-header { border-top-color: #EBEBF0 !important; }
+  .cat-group-name { color: #ABABBC !important; }
+  .cat-group-count { color: #ABABBC !important; }
+  .cat-group-total { color: #C0504A !important; }
+  .tx-view-btn { color: #ABABBC !important; background: none !important; }
+  .tx-view-btn.active { background: #FFFFFF !important; color: #1C1C1E !important; font-weight: 500 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+
+  /* CARDS */
+  .stat-card, .chart-card, .form-section, .goal-card, .debt-card, .wallet-hero, .prestamo-total-card, .guide-card { background: #FFFFFF !important; border-color: #E5E5EA !important; }
+  .stat-label, .chart-card-title, .form-section-title, .wallet-hero-label { color: #6B6B80 !important; }
+  .stat-value { color: #1C1C1E !important; }
+  .stat-sub { color: #6B6B80 !important; }
+  .wallet-hero-value { color: #1C1C1E !important; font-weight: 300 !important; }
+
+  /* DEBT CARDS */
+  .debt-card { border-left-color: #2DA866 !important; }
+  .debt-card.contra { border-left-color: #C0504A !important; }
+  .debt-name { color: #1C1C1E !important; }
+  .debt-meta { color: #6B6B80 !important; }
+  .debt-amount.favor { color: #2DA866 !important; }
+  .debt-amount.contra { color: #C0504A !important; }
+  .debt-badge.favor { background: #E8F7EF !important; color: #2DA866 !important; }
+  .debt-badge.contra { background: #FDECEA !important; color: #C0504A !important; }
+  .debt-due.ok { background: #E8F7EF !important; color: #2DA866 !important; }
+  .debt-due.soon { background: #FEF3E8 !important; border-color: #E8C080 !important; color: #A06820 !important; }
+  .debt-due.overdue { background: #FDECEA !important; color: #C0504A !important; }
+  .debt-paid-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
+  .debt-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
+  .debt-toggle { background: #EBEBF0 !important; }
+  .debt-toggle-btn { color: #ABABBC !important; }
+  .debt-toggle-btn.active.favor { background: #E8F7EF !important; color: #2DA866 !important; }
+  .debt-toggle-btn.active.contra { background: #FDECEA !important; color: #C0504A !important; }
+
+  /* FORMS */
+  .form-input { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #1C1C1E !important; }
+  .form-input::placeholder { color: #ABABBC !important; }
+  .form-label { color: #6B6B80 !important; }
+  .type-toggle { background: #EBEBF0 !important; }
+  .type-btn { color: #ABABBC !important; }
+  .type-btn.active.expense { background: #FDECEA !important; color: #C0504A !important; }
+  .type-btn.active.income { background: #E8F7EF !important; color: #2DA866 !important; }
+
+  /* MODALS */
+  .modal { background: #FFFFFF !important; }
+  .modal-handle { background: #E5E5EA !important; }
+  .modal-title { color: #1C1C1E !important; }
+
+  /* CAT CHIPS */
+  .cat-chip { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #6B6B80 !important; }
+  .cat-chip.selected { background: #4A4AFF !important; color: #FFF !important; border-color: #4A4AFF !important; }
+
+  /* GOALS */
+  .goal-name { color: #1C1C1E !important; }
+  .goal-detail { color: #6B6B80 !important; }
+  .goal-pct { color: #4A4AFF !important; }
+  .goal-bar-bg { background: #EBEBF0 !important; }
+  .goal-dep-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
+  .goal-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
+
+  /* PRÉSTAMOS */
+  .prestamo-total-label { color: #6B6B80 !important; }
+  .prestamo-total-amount { color: #1C1C1E !important; }
+  .prestamo-total-amount span { color: #6B6B80 !important; }
+  .prestamo-meta { color: #6B6B80 !important; }
+  .prestamo-person-name { color: #ABABBC !important; }
+  .prestamo-person-total { color: #C0504A !important; }
+  .prestamo-person-group { border-top-color: #EBEBF0 !important; }
+  .prestamo-tx-row { border-bottom-color: #EBEBF0 !important; }
+  .prestamo-tx-name { color: #1C1C1E !important; }
+  .prestamo-tx-sub { color: #6B6B80 !important; }
+  .prestamo-tx-amount { color: #6B6B80 !important; }
+
+  /* DETAIL ROWS */
+  .tx-detail-row { border-bottom-color: #EBEBF0 !important; }
+  .tx-detail-label { color: #6B6B80 !important; }
+  .tx-detail-value { color: #1C1C1E !important; }
+
+  /* CHART LEGENDS */
+  .pie-name { color: #1C1C1E !important; }
+  .pie-pct { color: #6B6B80 !important; }
+
+  /* MISC */
+  .empty-state { color: #ABABBC !important; }
+  .cat-chip-del { color: #ABABBC !important; }
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { background: var(--bg); }
@@ -61,43 +171,24 @@ body { font-family: var(--font); background: var(--bg); color: var(--text); min-
 
 /* BOTTOM NAV */
 .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: rgba(13,13,15,0.92); border-top: 0.5px solid #1e1e24; padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); display: flex; justify-content: space-around; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-@media (prefers-color-scheme: light) {
-  .bottom-nav { background: rgba(245,245,247,0.94); border-top-color: #d8d8e0; }
+
   .nav-item { color: #909098; }
   .nav-item.active { color: #0a0a12; }
   .nav-add { border-color: #f5f5f7; }
-  .tx-item { border-bottom-color: #e8e8f0; }
-  .prestamo-tx-row { border-bottom-color: #e8e8f0; }
-  .prestamo-person-group { border-top-color: #e8e8f0; }
-  .prestamo-total-card { background: #ffffff; }
-  .bank-tag.interbank { background: #e8f0f8; color: #2a5a8a; }
-  .bank-tag.bcp { background: #e8f5f0; color: #1a6a50; }
-  .bank-tag.bbva { background: #e8e8f8; color: #3a3a8a; }
-  .bank-tag.efectivo { background: #f5f0e0; color: #6a5a20; }
-  .bank-tag.default { background: #f0f0f8; color: #606080; }
-  .pill.green { background: #e8f5ef; border-color: #b0d8c0; color: #2a7a50; }
-  .pill.red { background: #f5e8e8; border-color: #d8b0b0; color: #804040; }
-  .cat-group-header { border-top-color: #e8e8f0; }
-  .topbar-badge { background: #f0f0f8; color: #606080; border-color: #d8d8e8; }
-  .form-input { background: #f0f0f8; border-color: #d8d8e8; color: #0a0a12; }
-  .form-input::placeholder { color: #b0b0c0; }
-  .type-btn.active.expense { background: #f5e8e8; color: #804040; }
-  .type-btn.active.income { background: #e8f5ef; color: #2a7a50; }
-  .debt-toggle-btn.active.favor { background: #e8f5ef; color: #2a7a50; }
-  .debt-toggle-btn.active.contra { background: #f5e8e8; color: #804040; }
-  .cat-chip { background: #f0f0f8; border-color: #d8d8e8; color: #606080; }
-  .cat-chip.selected { background: #3a3aee; color: #fff; border-color: #3a3aee; }
-  .modal { background: #ffffff; }
-  .modal-handle { background: #d8d8e8; }
-  .wallet-hero { background: #ffffff; border-color: #e0e0e8; }
-  .stat-card { background: #ffffff; border-color: #e0e0e8; }
-  .chart-card { background: #ffffff; border-color: #e0e0e8; }
-  .form-section { background: #ffffff; border-color: #e0e0e8; }
-  .goal-card { background: #ffffff; border-color: #e0e0e8; }
-  .debt-card { background: #ffffff; border-color: #e0e0e8; }
-  .guide-card { background: #ffffff; border-color: #e0e0e8; }
-  .tx-view-btn.active { background: #ffffff; color: #0a0a12; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
-}
+
+  /* Hero */
+  .hero-amount { color: #0a0a12; }
+  .hero-amount-prefix { color: #606080; }
+  .hero-label { color: #606080; }
+
+
+  /* Transactions */
+  .tx-item { border-bottom-color: #e0e0e8; }
+  .tx-name { color: #0a0a12; }
+  .tx-sub { color: #808098; }
+
+  /* Bank tags */
+
 
 /* NAV BASE */
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 4px 16px; border: none; background: none; color: #5a5a72; font-family: inherit; transition: color .2s; }
