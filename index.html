@@ -254,6 +254,7 @@ select.form-input option { background: #1a1f38; }
 .cat-group-item .tx-item { border-bottom: 1px solid var(--border); }
 .cat-group-item .tx-item:last-child { border-bottom: none; }
 .cat-group-item:first-child .cat-group-header { border-top: none; }
+.back-btn { background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:4px;color:var(--blue2);font-family:inherit;font-size:15px;font-weight:500;padding:0;flex-shrink:0; }
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text3); font-size: 14px; }</style>
 </head>
 <body>
@@ -276,14 +277,6 @@ select.form-input option { background: #1a1f38; }
     </div>
   </div>
 
-  <div class="cards-section">
-    <div class="section-head">
-      <div class="section-title">Mis cuentas</div>
-      <button class="section-link" onclick="showPage('page-wallet')">Ver todas</button>
-    </div>
-    <div class="cards-scroll" id="home-cards"></div>
-  </div>
-
   <div class="tx-section">
     <div class="section-head">
       <div class="section-title">Movimientos</div>
@@ -296,9 +289,17 @@ select.form-input option { background: #1a1f38; }
 <!-- TRANSACCIONES -->
 <div class="page" id="page-tx">
   <div class="topbar">
+    <button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     <div class="topbar-title">Movimientos</div>
     <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
-      <button class="tx-view-btn active" id="tvbtn-list" onclick="setTxView('list')">Lista</button>
+      <button class="tx-view-btn active" id="tfbtn-all" onclick="setTxFilter('all')">Todos</button>
+      <button class="tx-view-btn" id="tfbtn-income" onclick="setTxFilter('income')">Ingresos</button>
+      <button class="tx-view-btn" id="tfbtn-expense" onclick="setTxFilter('expense')">Gastos</button>
+    </div>
+  </div>
+  <div id="tx-view-toggle" style="display:none;justify-content:center;padding:10px 20px 0;background:var(--bg)">
+    <div style="display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px">
+      <button class="tx-view-btn active" id="tvbtn-list" onclick="setTxView('list')">General</button>
       <button class="tx-view-btn" id="tvbtn-cats" onclick="setTxView('cats')">Categorías</button>
       <button class="tx-view-btn" id="tvbtn-accs" onclick="setTxView('accs')">Cuenta</button>
     </div>
@@ -329,7 +330,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- BILLETERA -->
 <div class="page" id="page-wallet">
-  <div class="topbar"><div class="topbar-title">Billetera</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Billetera</div></div>
   <div class="page-content">
     <div class="wallet-hero">
       <div class="wallet-hero-item">
@@ -383,7 +384,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- GRÁFICOS / METAS -->
 <div class="page" id="page-stats">
-  <div class="topbar"><div class="topbar-title">Estadísticas</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Estadísticas</div></div>
   <div class="page-content">
     <div class="stat-grid">
       <div class="stat-card">
@@ -407,7 +408,10 @@ select.form-input option { background: #1a1f38; }
       <div class="chart-wrap"><canvas id="barChart" role="img" aria-label="Ingresos y gastos">Datos mensuales.</canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-card-title">Gastos por categoría</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="chart-card-title" style="margin-bottom:0">Gastos por categoría</div>
+        <button onclick="openCatModal()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;width:28px;height:28px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit">+</button>
+      </div>
       <div class="pie-wrap">
         <div class="pie-canvas-wrap"><canvas id="pieChart" role="img" aria-label="Categorías">Categorías.</canvas></div>
         <div class="pie-legend" id="pie-legend"></div>
@@ -449,7 +453,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- DEUDAS -->
 <div class="page" id="page-debts">
-  <div class="topbar"><div class="topbar-title">Deudas</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Deudas</div></div>
   <div class="page-content">
     <div class="debt-summary">
       <div class="stat-card">
@@ -514,7 +518,7 @@ select.form-input option { background: #1a1f38; }
 
 <!-- MORE / ATAJO -->
 <div class="page" id="page-more">
-  <div class="topbar"><div class="topbar-title">Más</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Más</div></div>
   <div class="page-content">
 
     <!-- CATEGORIAS -->
@@ -533,17 +537,6 @@ select.form-input option { background: #1a1f38; }
       </div>
       <button class="btn-primary" onclick="addCategory()">Agregar categoría</button>
     </div>
-
-    <div class="guide-card">
-      <div class="chart-card-title">Atajo iOS — Apple Pay</div>
-      <div class="guide-step"><div class="step-num">1</div><div class="step-text">Descarga la app <strong>Atajos</strong> de la App Store.</div></div>
-      <div class="guide-step"><div class="step-num">2</div><div class="step-text">Abre Atajos → toca <strong>"+"</strong> para crear uno nuevo.</div></div>
-      <div class="guide-step"><div class="step-num">3</div><div class="step-text">Busca <strong>"Abrir app"</strong> y selecciona Safari con tu URL de Vercel.</div></div>
-      <div class="guide-step"><div class="step-num">4</div><div class="step-text">Ve a <strong>"Automatización"</strong> → <strong>"+"</strong> → <strong>"Transacción"</strong> (Apple Pay).</div></div>
-      <div class="guide-step"><div class="step-num">5</div><div class="step-text">Selecciona <strong>"Después de una transacción"</strong> y agrega la acción.</div></div>
-      <div class="guide-step"><div class="step-num">6</div><div class="step-text">Activa <strong>"Ejecutar inmediatamente"</strong>.</div></div>
-      <div class="guide-note">Cada vez que pagues con Apple Pay, tu app se abre automáticamente.</div>
-    </div>
   </div>
 </div>
 
@@ -553,20 +546,20 @@ select.form-input option { background: #1a1f38; }
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <div class="nav-label">Inicio</div>
   </button>
-  <button class="nav-item" onclick="showPage('page-debts',this)" id="nav-debts">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-    <div class="nav-label">Deudas</div>
+  <button class="nav-item" onclick="showPage('page-wallet',this)" id="nav-wallet">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+    <div class="nav-label">Cuentas</div>
   </button>
   <button class="nav-add" onclick="openAddTx('expense')">
     <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" width="22" height="22"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   </button>
+  <button class="nav-item" onclick="showPage('page-debts',this)" id="nav-debts">
+    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    <div class="nav-label">Deudas</div>
+  </button>
   <button class="nav-item" onclick="showPage('page-stats',this);updateCharts()" id="nav-stats">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
     <div class="nav-label">Stats</div>
-  </button>
-  <button class="nav-item" onclick="showPage('page-more',this)" id="nav-more">
-    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-    <div class="nav-label">Más</div>
   </button>
 </nav>
 
@@ -667,6 +660,25 @@ select.form-input option { background: #1a1f38; }
   </div>
 </div>
 
+<!-- MODAL NUEVA CATEGORÍA -->
+<div class="modal-overlay" id="cat-create-modal" onclick="closeMod(event,'cat-create-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nueva categoría</div>
+    <div class="form-row">
+      <div class="form-group" style="flex:1">
+        <label class="form-label">Ícono</label>
+        <input class="form-input" id="qcat-icon" placeholder="🍽" style="font-size:20px;text-align:center" maxlength="2">
+      </div>
+      <div class="form-group" style="flex:3">
+        <label class="form-label">Nombre</label>
+        <input class="form-input" id="qcat-name" placeholder="Ej: Almuerzo, Gym...">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="addCategoryFromModal()">Agregar</button>
+  </div>
+</div>
+
 <!-- MODAL DEPOSITAR META -->
 <div class="modal-overlay" id="deposit-modal" onclick="closeMod(event,'deposit-modal')">
   <div class="modal">
@@ -685,6 +697,41 @@ select.form-input option { background: #1a1f38; }
     <p style="font-size:13px;color:var(--text2);margin-bottom:14px">Ingresa el saldo actual real.</p>
     <input class="form-input" id="adjust-amount" type="number" min="0" placeholder="Nuevo saldo (S/)" style="margin-bottom:14px" inputmode="decimal">
     <button class="btn-primary" onclick="confirmAdjust()">Guardar</button>
+  </div>
+</div>
+
+<!-- MODAL EDITAR DEUDA -->
+<div class="modal-overlay" id="debt-edit-modal" onclick="closeMod(event,'debt-edit-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Editar deuda</div>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label class="form-label" id="dedit-name-label">Nombre</label>
+        <input class="form-input" id="dedit-name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Monto (S/)</label>
+        <input class="form-input" id="dedit-amount" type="number" min="0" step="0.01" inputmode="decimal">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Motivo (opcional)</label>
+        <input class="form-input" id="dedit-reason" placeholder="Ej: Almuerzo...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha de generación</label>
+        <input class="form-input" id="dedit-created" type="date">
+      </div>
+    </div>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="form-group">
+        <label class="form-label">Fecha límite (opcional)</label>
+        <input class="form-input" id="dedit-due" type="date">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="saveDebtEdit()">Guardar cambios</button>
   </div>
 </div>
 
@@ -941,6 +988,25 @@ function getCatEmoji(cat) {
 }
 
 let txView = 'list';
+let txFilter = 'all';
+
+function setTxFilter(f) {
+  txFilter = f;
+  document.getElementById('tfbtn-all').className = 'tx-view-btn' + (f==='all'?' active':'');
+  document.getElementById('tfbtn-income').className = 'tx-view-btn' + (f==='income'?' active':'');
+  document.getElementById('tfbtn-expense').className = 'tx-view-btn' + (f==='expense'?' active':'');
+  const toggle = document.getElementById('tx-view-toggle');
+  toggle.style.display = f==='all' ? 'none' : 'flex';
+  // Hide Categorías for income (no categories on income)
+  document.getElementById('tvbtn-cats').style.display = f==='income' ? 'none' : '';
+  if (f==='all' || (f==='income' && txView==='cats')) {
+    txView='list';
+    document.getElementById('tvbtn-list').className='tx-view-btn active';
+    document.getElementById('tvbtn-cats').className='tx-view-btn';
+    document.getElementById('tvbtn-accs').className='tx-view-btn';
+  }
+  renderTxList();
+}
 
 function setTxView(v) {
   txView = v;
@@ -949,6 +1015,25 @@ function setTxView(v) {
   document.getElementById('tvbtn-accs').className = 'tx-view-btn' + (v==='accs'?' active':'');
   renderTxList();
 }
+
+function openCatModal() {
+  document.getElementById('qcat-icon').value = '';
+  document.getElementById('qcat-name').value = '';
+  document.getElementById('cat-create-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('qcat-name').focus(),300);
+}
+
+function addCategoryFromModal() {
+  const icon = document.getElementById('qcat-icon').value.trim();
+  const name = document.getElementById('qcat-name').value.trim();
+  if (!name) { alert('Ingresa un nombre.'); return; }
+  categories.push({ id: Date.now(), icon: icon || '📌', name });
+  saveCats();
+  document.getElementById('cat-create-modal').classList.remove('open');
+  renderCatsList();
+  renderCatChips();
+}
+
 
 function openCatDetail(cat) {
   const catObj = categories.find(c=>c.name===cat);
@@ -975,13 +1060,14 @@ function renderTxList() {
     : '<div class="empty-state">Agrega tu primera transacción</div>';
 
   const el = document.getElementById('all-tx-list');
-  if (!transactions.length) { el.innerHTML = '<div class="empty-state">Sin transacciones</div>'; return; }
+  const filtered = txFilter === 'all' ? transactions : transactions.filter(t => t.type === txFilter);
+  if (!filtered.length) { el.innerHTML = '<div class="empty-state">Sin transacciones</div>'; return; }
 
   if (txView === 'list') {
-    el.innerHTML = transactions.map(t=>txHTML(t,true)).join('');
+    el.innerHTML = filtered.map(t=>txHTML(t,true)).join('');
   } else if (txView === 'cats') {
     const groups = {};
-    transactions.forEach(t => {
+    filtered.forEach(t => {
       if (!groups[t.category]) groups[t.category] = { items: [], total: 0 };
       groups[t.category].items.push(t);
       groups[t.category].total += (t.type==='income' ? t.amount : -t.amount);
@@ -1008,7 +1094,7 @@ function renderTxList() {
     // Group by account
     const groups = {};
     const noAcc = { items: [], total: 0, name: 'Sin cuenta', color: 'var(--text3)' };
-    transactions.forEach(t => {
+    filtered.forEach(t => {
       if (!t.accountId) { noAcc.items.push(t); noAcc.total += (t.type==='income'?t.amount:-t.amount); return; }
       const acc = accounts.find(a=>a.id===t.accountId);
       if (!acc) return;
@@ -1247,11 +1333,41 @@ function renderDebts() {
       <div class="debt-meta"><span>Desde ${created}</span><span class="debt-due ${status.cls}">${status.label}</span></div>
       <div class="debt-actions">
         <button class="debt-paid-btn" onclick="openSettle(${idx})">${d.type==='favor'?'✓ Cobrado':'✓ Pagado'}</button>
+        <button class="debt-del-btn" onclick="openDebtEdit(${idx})">Editar</button>
         <button class="debt-del-btn" onclick="deleteDebt(${d.id})">Eliminar</button>
       </div>
     </div>`;
   }).join('');
 }
+
+let editDebtIdx = null;
+
+function openDebtEdit(idx) {
+  editDebtIdx = idx;
+  const d = debts[idx];
+  document.getElementById('dedit-name-label').textContent = d.type==='favor' ? '¿Quién te debe?' : '¿A quién le debes?';
+  document.getElementById('dedit-name').value = d.name;
+  document.getElementById('dedit-amount').value = d.amount;
+  document.getElementById('dedit-reason').value = d.reason || '';
+  document.getElementById('dedit-created').value = d.created || todayStr();
+  document.getElementById('dedit-due').value = d.due || '';
+  document.getElementById('debt-edit-modal').classList.add('open');
+}
+
+function saveDebtEdit() {
+  const d = debts[editDebtIdx];
+  const name = document.getElementById('dedit-name').value.trim();
+  const amount = parseFloat(document.getElementById('dedit-amount').value);
+  const reason = document.getElementById('dedit-reason').value.trim();
+  const created = document.getElementById('dedit-created').value || todayStr();
+  const due = document.getElementById('dedit-due').value;
+  if (!name || isNaN(amount) || amount <= 0) { alert('Completa nombre y monto.'); return; }
+  d.name = name; d.amount = amount; d.reason = reason; d.created = created; d.due = due;
+  saveDebts();
+  document.getElementById('debt-edit-modal').classList.remove('open');
+  renderDebts();
+}
+
 
 function toggleTxEdit() {
   const form = document.getElementById('tx-edit-form');
@@ -1388,7 +1504,6 @@ function updateAll() {
   updateMetrics();
   renderTxList();
   renderWallet();
-  renderHomeCards();
   renderDebts();
   renderGoals();
   populateAccountSelects();
