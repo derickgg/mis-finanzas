@@ -1364,11 +1364,12 @@ function renderTxList() {
     document.getElementById('home-tx-list').innerHTML = dateKeys.map(k => {
       const g = byDate[k];
       const totalColor = g.total >= 0 ? 'var(--green)' : 'var(--red)';
-      const sign = g.total >= 0 ? '+S/ ' : 'S/ ';
-      return '<div style="margin-bottom:2px">' +
-        '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 4px;border-bottom:0.5px solid var(--border2)">' +
-          '<span style="font-size:11px;font-weight:500;color:var(--text2);text-transform:capitalize">' + g.label + '</span>' +
-          '<span style="font-size:11px;font-weight:600;color:' + totalColor + '">' + sign + fmt(Math.abs(g.total)) + '</span>' +
+      const sign = g.total >= 0 ? '+' : '-';
+      const amt = Math.abs(g.total).toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
+      return '<div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:5px;border-bottom:0.5px solid var(--border2)">' +
+          '<span style="font-size:12px;font-weight:600;color:var(--text);text-transform:capitalize">' + g.label + '</span>' +
+          '<span style="font-size:12px;font-weight:600;color:' + totalColor + '">' + sign + 'S/ ' + amt + '</span>' +
         '</div>' +
         g.items.map(t => txHTML(t, false)).join('') +
       '</div>';
@@ -1853,7 +1854,7 @@ function renderAccDetail() {
   document.getElementById('acc-detail-banner').style.background = `linear-gradient(135deg, ${a.color}ee, ${a.color}99)`;
   document.getElementById('acc-detail-type').textContent = TYPE_LABELS[a.type] || a.type;
   document.getElementById('acc-detail-name').textContent = a.name;
-  document.getElementById('acc-detail-balance').textContent = 'S/ ' + fmt(a.balance);
+  document.getElementById('acc-detail-balance').textContent = fmt(a.balance);
 
   // Ingresos y gastos del mes de esta cuenta
   const now = new Date();
@@ -1864,8 +1865,8 @@ function renderAccDetail() {
   });
   const income = monthTxs.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
   const expense = monthTxs.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
-  document.getElementById('acc-detail-income').textContent = '+S/ ' + fmt(income);
-  document.getElementById('acc-detail-expense').textContent = 'S/ ' + fmt(expense);
+  document.getElementById('acc-detail-income').textContent = '+' + fmt(income);
+  document.getElementById('acc-detail-expense').textContent = fmt(expense);
 
   // Adjust button
   const idx = accounts.findIndex(ac => ac.id === a.id);
@@ -1904,20 +1905,22 @@ function renderAccDetailTxList() {
   const dateKeys = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
   el.innerHTML = dateKeys.map(k => {
     const g = byDate[k];
-    // En tab "todos" mostrar neto; en income/expense mostrar el total correspondiente
     let summaryHtml = '';
     if (accDetailTab === 'all') {
       const net = g.income - g.expense;
       const netColor = net >= 0 ? 'var(--green)' : 'var(--red)';
-      summaryHtml = '<span style="font-size:11px;font-weight:600;color:' + netColor + '">' + (net >= 0 ? '+' : '') + 'S/ ' + fmt(Math.abs(net)) + '</span>';
+      const netAmt = Math.abs(net).toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
+      summaryHtml = '<span style="font-size:12px;font-weight:600;color:' + netColor + '">' + (net >= 0 ? '+' : '-') + 'S/ ' + netAmt + '</span>';
     } else if (accDetailTab === 'income') {
-      summaryHtml = '<span style="font-size:11px;font-weight:600;color:var(--green)">+S/ ' + fmt(g.income) + '</span>';
+      const amt = g.income.toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
+      summaryHtml = '<span style="font-size:12px;font-weight:600;color:var(--green)">+S/ ' + amt + '</span>';
     } else {
-      summaryHtml = '<span style="font-size:11px;font-weight:600;color:var(--red)">S/ ' + fmt(g.expense) + '</span>';
+      const amt = g.expense.toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
+      summaryHtml = '<span style="font-size:12px;font-weight:600;color:var(--red)">-S/ ' + amt + '</span>';
     }
-    return '<div style="margin-bottom:2px">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0 4px;border-bottom:0.5px solid var(--border2)">' +
-        '<span style="font-size:11px;font-weight:500;color:var(--text2);text-transform:capitalize">' + g.label + '</span>' +
+    return '<div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:5px;border-bottom:0.5px solid var(--border2)">' +
+        '<span style="font-size:12px;font-weight:600;color:var(--text);text-transform:capitalize">' + g.label + '</span>' +
         summaryHtml +
       '</div>' +
       g.items.map(t => txHTML(t, true)).join('') +
