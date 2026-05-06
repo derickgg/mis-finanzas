@@ -35,136 +35,137 @@
 
 }
 @media (prefers-color-scheme: light) {
-  :root {
-    --bg: #F5F5F7; --surface: #FFFFFF; --surface2: #F5F5F7; --surface3: #EBEBF0;
-    --border: #E5E5EA; --border2: #EBEBF0;
-    --text: #1C1C1E; --text2: #6B6B80; --text3: #ABABBC;
-    --blue: #4A4AFF; --blue2: #4A4AFF;
-    --green: #2DA866; --green-dim: #E8F7EF; --green-border: #B8E8CC;
-    --red: #C0504A; --red-dim: #FDECEA; --red-border: #F5C0BC;
-    --amber: #A06820;
-  }
-
-  /* FONDO Y NAV */
-  .bottom-nav { background: rgba(255,255,255,0.96) !important; border-top-color: #E5E5EA !important; }
-  .nav-item { color: #ABABBC !important; }
-  .nav-item.active { color: #1C1C1E !important; }
-  .nav-label { color: inherit !important; }
-  .nav-add { border-color: #F5F5F7 !important; }
-
-  /* HERO — override hardcoded dark styles */
-  .hero-amount { color: #1C1C1E !important; font-weight: 200 !important; -webkit-text-fill-color: #1C1C1E !important; background: none !important; -webkit-background-clip: unset !important; background-clip: unset !important; }
-  .hero-amount-prefix { color: #6B6B80 !important; -webkit-text-fill-color: #6B6B80 !important; }
-  .hero-label { color: #6B6B80 !important; }
-  /* PILLS — high specificity */
-  .hero-pills .pill.green, .pill.green { background: #E8F7EF !important; border-color: #B8E8CC !important; color: #2DA866 !important; }
-  .hero-pills .pill.red, .pill.red { background: #FDECEA !important; border-color: #F5C0BC !important; color: #C0504A !important; }
-
-  /* TOPBAR */
-  .topbar-title { color: #1C1C1E !important; }
-  .topbar-badge { background: #1C1C1E !important; color: #FFFFFF !important; border-color: #1C1C1E !important; }
-  .back-btn { color: #6B6B80 !important; }
-  .section-title { color: #1C1C1E !important; }
-  .section-link { color: #4A4AFF !important; }
-
-  /* TRANSACCIONES */
-  .tx-item { border-bottom-color: #EBEBF0 !important; }
-  .tx-name { color: #1C1C1E !important; }
-  .tx-sub { color: #6B6B80 !important; }
-
-  /* BANK TAGS — high specificity to beat base dark styles */
-  .tx-item .bank-tag.interbank, .prestamo-tx-row .bank-tag.interbank, .bank-tag.interbank { background: #E8F0F8 !important; color: #2D6A9F !important; border: none !important; }
-  .tx-item .bank-tag.bcp, .prestamo-tx-row .bank-tag.bcp, .bank-tag.bcp { background: #E8F5F0 !important; color: #1F7A5C !important; border: none !important; }
-  .tx-item .bank-tag.bbva, .prestamo-tx-row .bank-tag.bbva, .bank-tag.bbva { background: #EEEEF8 !important; color: #3D3D9F !important; border: none !important; }
-  .tx-item .bank-tag.efectivo, .prestamo-tx-row .bank-tag.efectivo, .bank-tag.efectivo { background: #F5F0E8 !important; color: #7A6030 !important; border: none !important; }
-  .tx-item .bank-tag.default, .prestamo-tx-row .bank-tag.default, .bank-tag.default { background: #EBEBF0 !important; color: #6B6B80 !important; border: none !important; }
-
-  /* GROUPS / TABS */
-  .cat-group-header { border-top-color: #EBEBF0 !important; }
-  .cat-group-name { color: #ABABBC !important; }
-  .cat-group-count { color: #ABABBC !important; }
-  .cat-group-total { color: #C0504A !important; }
-  .tx-view-btn { color: #ABABBC !important; background: none !important; }
-  .tx-view-btn.active { background: #FFFFFF !important; color: #1C1C1E !important; font-weight: 500 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
-
-  /* CARDS */
-  .stat-card, .chart-card, .form-section, .goal-card, .debt-card, .wallet-hero, .prestamo-total-card, .guide-card { background: #FFFFFF !important; border-color: #E5E5EA !important; }
-  .stat-label, .chart-card-title, .form-section-title, .wallet-hero-label { color: #6B6B80 !important; }
-  .stat-value { color: #1C1C1E !important; }
-  .stat-sub { color: #6B6B80 !important; }
-  .wallet-hero-value { color: #1C1C1E !important; font-weight: 300 !important; }
-
-  /* DEBT CARDS */
-  .debt-card { border-left-color: #2DA866 !important; }
-  .debt-card.contra { border-left-color: #C0504A !important; }
-  .debt-name { color: #1C1C1E !important; }
-  .debt-meta { color: #6B6B80 !important; }
-  .debt-amount.favor { color: #2DA866 !important; }
-  .debt-amount.contra { color: #C0504A !important; }
-  .debt-badge.favor { background: #E8F7EF !important; color: #2DA866 !important; }
-  .debt-badge.contra { background: #FDECEA !important; color: #C0504A !important; }
-  .debt-due.ok { background: #E8F7EF !important; color: #2DA866 !important; }
-  .debt-due.soon { background: #FEF3E8 !important; border-color: #E8C080 !important; color: #A06820 !important; }
-  .debt-due.overdue { background: #FDECEA !important; color: #C0504A !important; }
-  .debt-paid-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
-  .debt-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
-  .debt-toggle { background: #EBEBF0 !important; }
-  .debt-toggle-btn { color: #ABABBC !important; }
-  .debt-toggle-btn.active.favor { background: #E8F7EF !important; color: #2DA866 !important; }
-  .debt-toggle-btn.active.contra { background: #FDECEA !important; color: #C0504A !important; }
-
-  /* FORMS */
-  .form-input { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #1C1C1E !important; }
-  .form-input::placeholder { color: #ABABBC !important; }
-  .form-label { color: #6B6B80 !important; }
-  .type-toggle { background: #EBEBF0 !important; }
-  .type-btn { color: #ABABBC !important; }
-  .type-btn.active.expense { background: #FDECEA !important; color: #C0504A !important; }
-  .type-btn.active.income { background: #E8F7EF !important; color: #2DA866 !important; }
-
-  /* MODALS */
-  .modal { background: #FFFFFF !important; }
-  .modal-handle { background: #E5E5EA !important; }
-  .modal-title { color: #1C1C1E !important; }
-
-  /* CAT CHIPS */
-  .cat-chip { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #6B6B80 !important; }
-  .cat-chip.selected { background: #4A4AFF !important; color: #FFF !important; border-color: #4A4AFF !important; }
-
-  /* GOALS */
-  .goal-name { color: #1C1C1E !important; }
-  .goal-detail { color: #6B6B80 !important; }
-  .goal-pct { color: #4A4AFF !important; }
-  .goal-bar-bg { background: #EBEBF0 !important; }
-  .goal-dep-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
-  .goal-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
-
-  /* PRÉSTAMOS */
-  .prestamo-total-label { color: #6B6B80 !important; }
-  .prestamo-total-amount { color: #1C1C1E !important; }
-  .prestamo-total-amount span { color: #6B6B80 !important; }
-  .prestamo-meta { color: #6B6B80 !important; }
-  .prestamo-person-name { color: #ABABBC !important; }
-  .prestamo-person-total { color: #C0504A !important; }
-  .prestamo-person-group { border-top-color: #EBEBF0 !important; }
-  .prestamo-tx-row { border-bottom-color: #EBEBF0 !important; }
-  .prestamo-tx-name { color: #1C1C1E !important; }
-  .prestamo-tx-sub { color: #6B6B80 !important; }
-  .prestamo-tx-amount { color: #6B6B80 !important; }
-
-  /* DETAIL ROWS */
-  .tx-detail-row { border-bottom-color: #EBEBF0 !important; }
-  .tx-detail-label { color: #6B6B80 !important; }
-  .tx-detail-value { color: #1C1C1E !important; }
-
-  /* CHART LEGENDS */
-  .pie-name { color: #1C1C1E !important; }
-  .pie-pct { color: #6B6B80 !important; }
-
-  /* MISC */
-  .empty-state { color: #ABABBC !important; }
-  .cat-chip-del { color: #ABABBC !important; }
 }
+html.light {
+  --bg: #F5F5F7; --surface: #FFFFFF; --surface2: #F5F5F7; --surface3: #EBEBF0;
+  --border: #E5E5EA; --border2: #EBEBF0;
+  --text: #1C1C1E; --text2: #6B6B80; --text3: #ABABBC;
+  --blue: #4A4AFF; --blue2: #4A4AFF;
+  --green: #2DA866; --green-dim: #E8F7EF; --green-border: #B8E8CC;
+  --red: #C0504A; --red-dim: #FDECEA; --red-border: #F5C0BC;
+  --amber: #A06820;
+}
+
+html.light .bottom-nav { background: rgba(255,255,255,0.96) !important; border-top-color: #E5E5EA !important; }
+html.light .nav-item { color: #ABABBC !important; }
+html.light .nav-item.active { color: #1C1C1E !important; }
+html.light .nav-label { color: inherit !important; }
+html.light .nav-add { border-color: #F5F5F7 !important; }
+
+
+/* HERO — override hardcoded dark styles */
+html.light .hero-amount { color: #1C1C1E !important; font-weight: 200 !important; -webkit-text-fill-color: #1C1C1E !important; background: none !important; -webkit-background-clip: unset !important; background-clip: unset !important; }
+html.light .hero-amount-prefix { color: #6B6B80 !important; -webkit-text-fill-color: #6B6B80 !important; }
+html.light .hero-label { color: #6B6B80 !important; }
+/* PILLS — high specificity */
+html.light .hero-pills .pill.green, html.light .pill.green { background: #E8F7EF !important; border-color: #B8E8CC !important; color: #2DA866 !important; }
+html.light .hero-pills .pill.red, html.light .pill.red { background: #FDECEA !important; border-color: #F5C0BC !important; color: #C0504A !important; }
+
+/* TOPBAR */
+html.light .topbar-title { color: #1C1C1E !important; }
+html.light .topbar-badge { background: #1C1C1E !important; color: #FFFFFF !important; border-color: #1C1C1E !important; }
+html.light .back-btn { color: #6B6B80 !important; }
+html.light .section-title { color: #1C1C1E !important; }
+html.light .section-link { color: #4A4AFF !important; }
+
+/* TRANSACCIONES */
+html.light .tx-item { border-bottom-color: #EBEBF0 !important; }
+html.light .tx-name { color: #1C1C1E !important; }
+html.light .tx-sub { color: #6B6B80 !important; }
+
+/* BANK TAGS — high specificity to beat base dark styles */
+html.light .tx-item .bank-tag.interbank, html.light .prestamo-tx-row .bank-tag.interbank, html.light .bank-tag.interbank { background: #E8F0F8 !important; color: #2D6A9F !important; border: none !important; }
+html.light .tx-item .bank-tag.bcp, html.light .prestamo-tx-row .bank-tag.bcp, html.light .bank-tag.bcp { background: #E8F5F0 !important; color: #1F7A5C !important; border: none !important; }
+html.light .tx-item .bank-tag.bbva, html.light .prestamo-tx-row .bank-tag.bbva, html.light .bank-tag.bbva { background: #EEEEF8 !important; color: #3D3D9F !important; border: none !important; }
+html.light .tx-item .bank-tag.efectivo, html.light .prestamo-tx-row .bank-tag.efectivo, html.light .bank-tag.efectivo { background: #F5F0E8 !important; color: #7A6030 !important; border: none !important; }
+html.light .tx-item .bank-tag.default, html.light .prestamo-tx-row .bank-tag.default, html.light .bank-tag.default { background: #EBEBF0 !important; color: #6B6B80 !important; border: none !important; }
+
+/* GROUPS / TABS */
+html.light .cat-group-header { border-top-color: #EBEBF0 !important; }
+html.light .cat-group-name { color: #ABABBC !important; }
+html.light .cat-group-count { color: #ABABBC !important; }
+html.light .cat-group-total { color: #C0504A !important; }
+html.light .tx-view-btn { color: #ABABBC !important; background: none !important; }
+html.light .tx-view-btn.active { background: #FFFFFF !important; color: #1C1C1E !important; font-weight: 500 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+
+/* CARDS */
+html.light .stat-card, html.light .chart-card, html.light .form-section, html.light .goal-card, html.light .debt-card, html.light .wallet-hero, html.light .prestamo-total-card, html.light .guide-card { background: #FFFFFF !important; border-color: #E5E5EA !important; }
+html.light .stat-label, html.light .chart-card-title, html.light .form-section-title, html.light .wallet-hero-label { color: #6B6B80 !important; }
+html.light .stat-value { color: #1C1C1E !important; }
+html.light .stat-sub { color: #6B6B80 !important; }
+html.light .wallet-hero-value { color: #1C1C1E !important; font-weight: 300 !important; }
+
+/* DEBT CARDS */
+html.light .debt-card { border-left-color: #2DA866 !important; }
+html.light .debt-card.contra { border-left-color: #C0504A !important; }
+html.light .debt-name { color: #1C1C1E !important; }
+html.light .debt-meta { color: #6B6B80 !important; }
+html.light .debt-amount.favor { color: #2DA866 !important; }
+html.light .debt-amount.contra { color: #C0504A !important; }
+html.light .debt-badge.favor { background: #E8F7EF !important; color: #2DA866 !important; }
+html.light .debt-badge.contra { background: #FDECEA !important; color: #C0504A !important; }
+html.light .debt-due.ok { background: #E8F7EF !important; color: #2DA866 !important; }
+html.light .debt-due.soon { background: #FEF3E8 !important; border-color: #E8C080 !important; color: #A06820 !important; }
+html.light .debt-due.overdue { background: #FDECEA !important; color: #C0504A !important; }
+html.light .debt-paid-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
+html.light .debt-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
+html.light .debt-toggle { background: #EBEBF0 !important; }
+html.light .debt-toggle-btn { color: #ABABBC !important; }
+html.light .debt-toggle-btn.active.favor { background: #E8F7EF !important; color: #2DA866 !important; }
+html.light .debt-toggle-btn.active.contra { background: #FDECEA !important; color: #C0504A !important; }
+
+/* FORMS */
+html.light .form-input { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #1C1C1E !important; }
+html.light .form-input::placeholder { color: #ABABBC !important; }
+html.light .form-label { color: #6B6B80 !important; }
+html.light .type-toggle { background: #EBEBF0 !important; }
+html.light .type-btn { color: #ABABBC !important; }
+html.light .type-btn.active.expense { background: #FDECEA !important; color: #C0504A !important; }
+html.light .type-btn.active.income { background: #E8F7EF !important; color: #2DA866 !important; }
+
+/* MODALS */
+html.light .modal { background: #FFFFFF !important; }
+html.light .modal-handle { background: #E5E5EA !important; }
+html.light .modal-title { color: #1C1C1E !important; }
+
+/* CAT CHIPS */
+html.light .cat-chip { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #6B6B80 !important; }
+html.light .cat-chip.selected { background: #4A4AFF !important; color: #FFF !important; border-color: #4A4AFF !important; }
+
+/* GOALS */
+html.light .goal-name { color: #1C1C1E !important; }
+html.light .goal-detail { color: #6B6B80 !important; }
+html.light .goal-pct { color: #4A4AFF !important; }
+html.light .goal-bar-bg { background: #EBEBF0 !important; }
+html.light .goal-dep-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
+html.light .goal-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
+
+/* PRÉSTAMOS */
+html.light .prestamo-total-label { color: #6B6B80 !important; }
+html.light .prestamo-total-amount { color: #1C1C1E !important; }
+html.light .prestamo-total-amount span { color: #6B6B80 !important; }
+html.light .prestamo-meta { color: #6B6B80 !important; }
+html.light .prestamo-person-name { color: #ABABBC !important; }
+html.light .prestamo-person-total { color: #C0504A !important; }
+html.light .prestamo-person-group { border-top-color: #EBEBF0 !important; }
+html.light .prestamo-tx-row { border-bottom-color: #EBEBF0 !important; }
+html.light .prestamo-tx-name { color: #1C1C1E !important; }
+html.light .prestamo-tx-sub { color: #6B6B80 !important; }
+html.light .prestamo-tx-amount { color: #6B6B80 !important; }
+
+/* DETAIL ROWS */
+html.light .tx-detail-row { border-bottom-color: #EBEBF0 !important; }
+html.light .tx-detail-label { color: #6B6B80 !important; }
+html.light .tx-detail-value { color: #1C1C1E !important; }
+
+/* CHART LEGENDS */
+html.light .pie-name { color: #1C1C1E !important; }
+html.light .pie-pct { color: #6B6B80 !important; }
+
+/* MISC */
+html.light .empty-state { color: #ABABBC !important; }
+html.light .cat-chip-del { color: #ABABBC !important; }
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html { background: var(--bg); }
 body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: calc(80px + env(safe-area-inset-bottom)); overflow-x: hidden; }
@@ -362,6 +363,21 @@ select.form-input option { background: #1e1e28; }
 .prestamo-tx-amount { font-size: 14px; font-weight: 500; color: #8888a8; flex-shrink: 0; }
 
 .empty-state { text-align: center; padding: 40px 20px; color: #5a5a72; font-size: 14px; }</style>
+<script>
+// Detectar y aplicar tema claro/oscuro
+(function() {
+  function applyTheme(isDark) {
+    if (isDark) {
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+    }
+  }
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  applyTheme(mq.matches);
+  mq.addEventListener('change', function(e) { applyTheme(e.matches); });
+})();
+</script>
 </head>
 <body>
 
