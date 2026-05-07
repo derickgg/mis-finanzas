@@ -34,189 +34,7 @@
 }
 
 }
-@media (prefers-color-scheme: light) {
-}
-html.light {
-  --bg: #F5F5F7; --surface: #FFFFFF; --surface2: #F5F5F7; --surface3: #EBEBF0;
-  --border: #E5E5EA; --border2: #EBEBF0;
-  --text: #1C1C1E; --text2: #6B6B80; --text3: #ABABBC;
-  --blue: #4A4AFF; --blue2: #4A4AFF;
-  --green: #2DA866; --green-dim: #E8F7EF; --green-border: #B8E8CC;
-  --red: #C0504A; --red-dim: #FDECEA; --red-border: #F5C0BC;
-  --amber: #A06820;
-}
 
-/* ===== LIGHT MODE ===== */
-
-/* NAV */
-html.light .bottom-nav { background: rgba(255,255,255,0.96) !important; border-top-color: #E5E5EA !important; }
-html.light .nav-item { color: #ABABBC !important; }
-html.light .nav-item.active { color: #1C1C1E !important; }
-html.light .nav-label { color: inherit !important; }
-html.light .nav-add { border-color: #F5F5F7 !important; }
-
-/* TOPBAR */
-html.light .topbar-title { color: #1C1C1E !important; font-weight: 600 !important; }
-html.light .topbar-badge { background: #1C1C1E !important; color: #FFFFFF !important; border-color: #1C1C1E !important; }
-html.light .back-btn { color: #ABABBC !important; }
-html.light .section-title { color: #1C1C1E !important; }
-html.light .section-link { color: #4A4AFF !important; }
-
-/* HOME HERO */
-html.light .hero-amount { color: #1C1C1E !important; font-weight: 200 !important; -webkit-text-fill-color: #1C1C1E !important; background: none !important; -webkit-background-clip: unset !important; background-clip: unset !important; }
-html.light .hero-amount-prefix { color: #ABABBC !important; -webkit-text-fill-color: #ABABBC !important; }
-html.light .hero-label { color: #ABABBC !important; }
-html.light .hero-pills .pill.green, html.light .pill.green { background: #E8F7EF !important; border-color: #B8E8CC !important; color: #2DA866 !important; }
-html.light .hero-pills .pill.red, html.light .pill.red { background: #FDECEA !important; border-color: #F5C0BC !important; color: #C0504A !important; }
-
-/* TRANSACTIONS */
-html.light .tx-item { border-bottom-color: #EBEBF0 !important; }
-html.light .tx-name { color: #1C1C1E !important; font-weight: 500 !important; }
-html.light .tx-sub { color: #ABABBC !important; }
-
-/* BANK TAGS — all contexts */
-html.light .bank-tag.interbank { background: #E8F0F8 !important; color: #2D6A9F !important; border: none !important; }
-html.light .bank-tag.bcp { background: #E8F5F0 !important; color: #1F7A5C !important; border: none !important; }
-html.light .bank-tag.bbva { background: #EEEEF8 !important; color: #3D3D9F !important; border: none !important; }
-html.light .bank-tag.efectivo { background: #F5F0E8 !important; color: #7A6030 !important; border: none !important; }
-html.light .bank-tag.default { background: #EBEBF0 !important; color: #6B6B80 !important; border: none !important; }
-
-/* TX VIEW TABS */
-html.light .tx-view-btn { color: #ABABBC !important; background: none !important; }
-html.light .tx-view-btn.active { background: #FFFFFF !important; color: #1C1C1E !important; font-weight: 500 !important; box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
-
-/* CATEGORY GROUPS */
-html.light .cat-group-header { border-top-color: #EBEBF0 !important; }
-html.light .cat-group-name { color: #ABABBC !important; text-transform: uppercase !important; }
-html.light .cat-group-count { color: #ABABBC !important; }
-html.light .cat-group-total { color: #C0504A !important; font-weight: 600 !important; }
-
-/* CARDS & SURFACES */
-html.light .stat-card, html.light .chart-card, html.light .form-section, html.light .goal-card, html.light .debt-card, html.light .wallet-hero, html.light .prestamo-total-card, html.light .guide-card { background: #FFFFFF !important; border-color: #E5E5EA !important; }
-html.light .stat-label, html.light .chart-card-title, html.light .form-section-title, html.light .wallet-hero-label { color: #ABABBC !important; }
-html.light .stat-value { color: #1C1C1E !important; font-weight: 300 !important; }
-html.light .stat-sub { color: #ABABBC !important; }
-html.light .wallet-hero-value { color: #1C1C1E !important; font-weight: 300 !important; }
-
-/* WALLET — account cards: soft corporate backgrounds */
-html.light .wallet-acc-card[style*="linear-gradient"] { background: #F5F5F7 !important; }
-
-/* STATS page — hide date pill */
-html.light #stats-topbar-month { display: none !important; }
-
-/* STATS charts */
-html.light .pie-name { color: #1C1C1E !important; }
-html.light .pie-pct { color: #6B6B80 !important; }
-
-/* DEBTS — hide topbar badge */
-html.light #debts-topbar-net { display: none !important; }
-
-/* DEBT CARDS */
-html.light .debt-card { border-color: #E5E5EA !important; border-left-width: 2px !important; }
-html.light .debt-card.favor { border-left-color: #2DA866 !important; }
-html.light .debt-card.contra { border-left-color: #C0504A !important; }
-html.light .debt-name { color: #1C1C1E !important; font-weight: 500 !important; }
-html.light .debt-meta { color: #ABABBC !important; }
-html.light .debt-amount { font-weight: 300 !important; }
-html.light .debt-amount.favor { color: #2DA866 !important; }
-html.light .debt-amount.contra { color: #6B6B80 !important; }
-html.light .debt-badge.favor { background: #E8F7EF !important; color: #2DA866 !important; }
-html.light .debt-badge.contra { background: #FDECEA !important; color: #C0504A !important; }
-html.light .debt-due.ok { background: #E8F7EF !important; color: #2DA866 !important; }
-html.light .debt-due.soon { background: #FEF3E8 !important; border-color: #E8C080 !important; color: #A06820 !important; }
-html.light .debt-due.overdue { background: #FDECEA !important; color: #C0504A !important; }
-html.light .debt-paid-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; border-radius: 10px !important; }
-html.light .debt-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; border-radius: 10px !important; }
-html.light .debt-toggle { background: #EBEBF0 !important; }
-html.light .debt-toggle-btn { color: #ABABBC !important; }
-html.light .debt-toggle-btn.active.favor { background: #E8F7EF !important; color: #2DA866 !important; }
-html.light .debt-toggle-btn.active.contra { background: #FDECEA !important; color: #C0504A !important; }
-
-/* FORMS & MODALS */
-html.light .form-input { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #1C1C1E !important; border-radius: 10px !important; }
-html.light .form-input::placeholder { color: #ABABBC !important; }
-html.light .form-label { color: #6B6B80 !important; }
-html.light .type-toggle { background: #F5F5F7 !important; }
-html.light .type-btn { color: #ABABBC !important; }
-html.light .type-btn.active.expense { background: #FDECEA !important; color: #C0504A !important; }
-html.light .type-btn.active.income { background: #E8F7EF !important; color: #2DA866 !important; }
-html.light .modal { background: #FFFFFF !important; }
-html.light .modal-handle { background: #EBEBF0 !important; }
-html.light .modal-title { color: #1C1C1E !important; font-weight: 600 !important; }
-html.light .btn-primary { border-radius: 14px !important; font-weight: 500 !important; }
-
-/* CAT CHIPS */
-html.light .cat-chip { background: #F5F5F7 !important; border-color: #E5E5EA !important; color: #6B6B80 !important; }
-html.light .cat-chip.selected { background: #4A4AFF !important; color: #FFF !important; border-color: #4A4AFF !important; }
-html.light .cat-chip-del { color: #ABABBC !important; }
-/* HOME CARDS (horizontal scroll) — light mode */
-html.light .acc-card { background: var(--surface2) !important; border-color: var(--border) !important; }
-html.light .acc-card-type { font-size: 10px !important; font-weight: 600 !important; text-transform: uppercase !important; }
-html.light .acc-card-name { color: #1C1C1E !important; font-weight: 500 !important; }
-html.light .acc-card-balance { font-weight: 300 !important; }
-
-/* STATS — chart colors handled via JS; fix legend text */
-html.light .chart-label { color: #ABABBC !important; font-size: 9px !important; }
-html.light .legend-name { color: #1C1C1E !important; }
-html.light .legend-pct { color: #6B6B80 !important; }
-
-/* WALLET HERO summary card labels */
-html.light .wallet-hero-label { color: #ABABBC !important; text-transform: uppercase !important; letter-spacing: .08em !important; font-size: 10px !important; font-weight: 600 !important; }
-
-/* ACC DETAIL mini-cards (inside banner) */
-html.light #acc-detail-banner .acc-mini-card { background: rgba(255,255,255,0.6) !important; }
-
-/* TOPBAR wallet badge */
-html.light #wallet-topbar-total { background: #FFFFFF !important; color: #1C1C1E !important; border: 1px solid #E5E5EA !important; }
-
-/* WALLET add-account button in topbar */
-html.light .wallet-add-btn { background: #F5F5F7 !important; border: 1px solid #E5E5EA !important; color: #6B6B80 !important; }
-
-/* PRESTAMOS tx note/amount */
-html.light .prestamo-tx-note { color: #6B6B80 !important; }
-html.light .prestamo-tx-amount { color: #6B6B80 !important; }
-html.light .prestamo-tx-chevron { color: #ABABBC !important; stroke: #ABABBC !important; }
-
-/* STAT card weight override for income/expense amounts */
-html.light .stat-value.income { color: #2DA866 !important; font-weight: 300 !important; }
-html.light .stat-value.expense { color: #C0504A !important; font-weight: 300 !important; }
-
-/* EMPTY STATE */
-html.light .empty-state { color: #ABABBC !important; }
-
-/* SECTION HEADERS */
-html.light .section-title { color: #1C1C1E !important; font-size: 17px !important; font-weight: 600 !important; }
-html.light .section-link { color: #4A4AFF !important; font-size: 14px !important; font-weight: 500 !important; }
-
-
-/* GOALS */
-html.light .goal-name { color: #1C1C1E !important; }
-html.light .goal-detail { color: #6B6B80 !important; }
-html.light .goal-pct { color: #4A4AFF !important; }
-html.light .goal-bar-bg { background: #EBEBF0 !important; }
-html.light .goal-dep-btn { background: #E8F7EF !important; color: #2DA866 !important; border-color: #B8E8CC !important; }
-html.light .goal-del-btn { background: #F5F5F7 !important; color: #6B6B80 !important; border-color: #E5E5EA !important; }
-
-/* PRÉSTAMOS */
-html.light .prestamo-total-label { color: #ABABBC !important; }
-html.light .prestamo-total-amount { color: #1C1C1E !important; font-weight: 200 !important; }
-html.light .prestamo-total-amount span { color: #ABABBC !important; }
-html.light .prestamo-meta { color: #ABABBC !important; }
-html.light .prestamo-person-name { color: #ABABBC !important; text-transform: uppercase !important; letter-spacing: .08em !important; }
-html.light .prestamo-person-total { color: #C0504A !important; font-weight: 600 !important; }
-html.light .prestamo-person-group { border-top-color: #EBEBF0 !important; }
-html.light .prestamo-tx-row { border-bottom-color: #EBEBF0 !important; }
-html.light .prestamo-tx-name { color: #1C1C1E !important; font-weight: 500 !important; }
-html.light .prestamo-tx-sub { color: #6B6B80 !important; }
-html.light .prestamo-tx-amount { color: #6B6B80 !important; }
-
-/* TX DETAIL */
-html.light .tx-detail-row { border-bottom-color: #EBEBF0 !important; }
-html.light .tx-detail-label { color: #6B6B80 !important; }
-html.light .tx-detail-value { color: #1C1C1E !important; }
-
-/* MISC */
-html.light .empty-state { color: #ABABBC !important; }
 
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -416,21 +234,7 @@ select.form-input option { background: #1e1e28; }
 .prestamo-tx-amount { font-size: 14px; font-weight: 500; color: #8888a8; flex-shrink: 0; }
 
 .empty-state { text-align: center; padding: 40px 20px; color: #5a5a72; font-size: 14px; }</style>
-<script>
-// Detectar y aplicar tema claro/oscuro
-(function() {
-  function applyTheme(isDark) {
-    if (isDark) {
-      document.documentElement.classList.remove('light');
-    } else {
-      document.documentElement.classList.add('light');
-    }
-  }
-  var mq = window.matchMedia('(prefers-color-scheme: dark)');
-  applyTheme(mq.matches);
-  mq.addEventListener('change', function(e) { applyTheme(e.matches); });
-})();
-</script>
+
 </head>
 <body>
 
@@ -1148,16 +952,12 @@ function renderWallet() {
 
   const grid=document.getElementById('accounts-grid');
   if(!accounts.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1">Agrega tu primera cuenta abajo</div>';return;}
-  const isLight = document.documentElement.classList.contains('light');
   grid.innerHTML=accounts.map((a,i)=>{
-    const SOFT = {interbank:'#E8F5EE',bcp:'#E8F3F3',bbva:'#E8EAF5',efectivo:'#EEE8F5'};
-    const SOFT_BORDER = {interbank:'#B8DFC8',bcp:'#B8D8D8',bbva:'#B8C0E8',efectivo:'#CDB8E8'};
-    const SOFT_TYPE = {interbank:'#2DA866',bcp:'#1F7A5C',bbva:'#3D3D9F',efectivo:'#6B4FA8'};
     const bankKey = a.name.toLowerCase().includes('interbank')?'interbank':a.name.toLowerCase().includes('bcp')?'bcp':a.name.toLowerCase().includes('bbva')?'bbva':a.name.toLowerCase().includes('efectivo')?'efectivo':'';
-    const bg = isLight && bankKey ? SOFT[bankKey] : null;
-    const bdr = isLight && bankKey ? SOFT_BORDER[bankKey] : null;
-    const typeColor = isLight && bankKey ? SOFT_TYPE[bankKey] : 'rgba(255,255,255,0.7)';
-    const textColor = isLight ? '#1C1C1E' : '#fff';
+    const bg = null;
+    const bdr = null;
+    const typeColor = 'rgba(255,255,255,0.7)';
+    const textColor = '#fff';
     const cardStyle = bg ? `background:${bg};border:1px solid ${bdr};` : `background:linear-gradient(135deg,${a.color}dd,${a.color}99);border:none;`;
     const btnStyle = bg ? `background:rgba(255,255,255,0.7);color:${typeColor};` : `background:rgba(0,0,0,0.2);color:#fff;`;
     return `<div class="wallet-acc-card" style="${cardStyle}cursor:pointer;border-radius:var(--radius-sm);padding:16px" onclick="openAccDetail(${a.id})">
@@ -1939,36 +1739,16 @@ function renderAccDetail() {
 
   // Banner
   document.getElementById('acc-detail-title').textContent = a.name;
-  const isLightMode = document.documentElement.classList.contains('light');
-  const SOFT_BG = {interbank:'#E8F5EE',bcp:'#E8F3F3',bbva:'#E8EAF5',efectivo:'#EEE8F5'};
-  const SOFT_BDR = {interbank:'#B8DFC8',bcp:'#B8D8D8',bbva:'#B8C0E8',efectivo:'#CDB8E8'};
-  const SOFT_TYPE_COLOR = {interbank:'#2DA866',bcp:'#1F7A5C',bbva:'#3D3D9F',efectivo:'#6B4FA8'};
-  const aKey = a.name.toLowerCase().includes('interbank')?'interbank':a.name.toLowerCase().includes('bcp')?'bcp':a.name.toLowerCase().includes('bbva')?'bbva':a.name.toLowerCase().includes('efectivo')?'efectivo':'';
   const bannerEl = document.getElementById('acc-detail-banner');
   const detailTypeEl = document.getElementById('acc-detail-type');
   const detailNameEl = document.getElementById('acc-detail-name');
   const detailBalanceEl = document.getElementById('acc-detail-balance');
-  if (isLightMode && aKey) {
-    bannerEl.style.background = SOFT_BG[aKey];
-    bannerEl.style.border = '1px solid ' + SOFT_BDR[aKey];
-    bannerEl.style.boxShadow = 'none';
-    detailTypeEl.style.color = SOFT_TYPE_COLOR[aKey];
-    detailNameEl.style.color = '#1C1C1E';
-    detailBalanceEl.style.color = '#1C1C1E';
-    detailBalanceEl.style.fontWeight = '200';
-          // mini income/expense labels
-    const incEl = document.getElementById('acc-detail-income');
-    const expEl = document.getElementById('acc-detail-expense');
-    if (incEl) incEl.style.color = '#2DA866';
-    if (expEl) expEl.style.color = '#C0504A';
-  } else {
-    bannerEl.style.background = `linear-gradient(135deg, ${a.color}ee, ${a.color}99)`;
-    bannerEl.style.border = 'none';
-    detailTypeEl.style.color = 'rgba(255,255,255,0.65)';
-    detailNameEl.style.color = '#fff';
-    detailBalanceEl.style.color = '#fff';
-    detailBalanceEl.style.fontWeight = '300';
-        }
+  bannerEl.style.background = `linear-gradient(135deg, ${a.color}ee, ${a.color}99)`;
+  bannerEl.style.border = 'none';
+  detailTypeEl.style.color = 'rgba(255,255,255,0.65)';
+  detailNameEl.style.color = '#fff';
+  detailBalanceEl.style.color = '#fff';
+  detailBalanceEl.style.fontWeight = '300';
   document.getElementById('acc-detail-type').textContent = TYPE_LABELS[a.type] || a.type;
   document.getElementById('acc-detail-name').textContent = a.name;
   document.getElementById('acc-detail-balance').textContent = fmt(calcBalance(a));
