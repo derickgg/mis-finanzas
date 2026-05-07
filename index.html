@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Cash Flow">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234A4AFF'/><text y='68' x='50' text-anchor='middle' font-size='60' font-family='system-ui'>💰</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%234A4AFF'/><text y='68' x='50' text-anchor='middle' font-size='60' font-family='system-ui'>[din]</text></svg>">
 <title>Finanzas</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -710,7 +710,7 @@ select.form-input option { background: #1e1e28; }
       <div class="form-row">
         <div class="form-group" style="flex:1">
           <label class="form-label">Ícono</label>
-          <input class="form-input" id="cat-icon" placeholder="🍽" style="font-size:20px;text-align:center" maxlength="2">
+          <input class="form-input" id="cat-icon" placeholder="[comida]" style="font-size:20px;text-align:center" maxlength="2">
         </div>
         <div class="form-group" style="flex:3">
           <label class="form-label">Nombre</label>
@@ -914,7 +914,7 @@ select.form-input option { background: #1e1e28; }
     <div class="form-row">
       <div class="form-group" style="flex:1">
         <label class="form-label">Ícono</label>
-        <input class="form-input" id="qcat-icon" placeholder="🍽" style="font-size:20px;text-align:center" maxlength="2">
+        <input class="form-input" id="qcat-icon" placeholder="[comida]" style="font-size:20px;text-align:center" maxlength="2">
       </div>
       <div class="form-group" style="flex:3">
         <label class="form-label">Nombre</label>
@@ -1108,7 +1108,21 @@ function deleteAccount(id) { accounts=accounts.filter(a=>a.id!==id); save(); upd
 function calcBalance(acc) {
   const txs = transactions.filter(t => t.accountId === acc.id);
   const txSum = txs.reduce((s,t) => s + (t.type==='income' ? t.amount : -t.amount), 0);
-  return (acc.initialBalance || acc.balance || 0) + txSum;
+  return (acc.initialBalance ?? 0) + txSum;
+}
+
+function migrateBalances() {
+  let changed = false;
+  accounts.forEach(acc => {
+    if (acc.initialBalance === undefined) {
+      // Compute what the txSum was, back out the initial balance
+      const txs = transactions.filter(t => t.accountId === acc.id);
+      const txSum = txs.reduce((s,t) => s + (t.type==='income' ? t.amount : -t.amount), 0);
+      acc.initialBalance = (acc.balance || 0) - txSum;
+      changed = true;
+    }
+  });
+  if (changed) save();
 }
 
 function openAdjust(idx) {
@@ -1261,12 +1275,12 @@ function txHTML(t, showAction=false, smallAmount=false) {
 
 function getCatEmoji(cat) {
   const c = cat.toLowerCase();
-  if(c.includes('alm')||c.includes('com')||c.includes('rest')||c.includes('food')) return '🍽';
-  if(c.includes('uber')||c.includes('taxi')||c.includes('trans')) return '🚗';
-  if(c.includes('super')||c.includes('merca')) return '🛒';
-  if(c.includes('salud')||c.includes('farm')||c.includes('med')) return '💊';
-  if(c.includes('entret')||c.includes('cine')||c.includes('ocio')) return '🎬';
-  if(c.includes('ropa')||c.includes('vest')) return '👕';
+  if(c.includes('alm')||c.includes('com')||c.includes('rest')||c.includes('food')) return '[comida]';
+  if(c.includes('uber')||c.includes('taxi')||c.includes('trans')) return '[trans]';
+  if(c.includes('super')||c.includes('merca')) return '[comp]';
+  if(c.includes('salud')||c.includes('farm')||c.includes('med')) return '[salud]';
+  if(c.includes('entret')||c.includes('cine')||c.includes('ocio')) return '[ocio]';
+  if(c.includes('ropa')||c.includes('vest')) return '[ropa]';
   if(c.includes('serv')||c.includes('luz')||c.includes('agua')||c.includes('gas')) return '⚡';
   return '↓';
 }
@@ -1309,7 +1323,7 @@ function addCategoryFromModal() {
   const icon = document.getElementById('qcat-icon').value.trim();
   const name = document.getElementById('qcat-name').value.trim();
   if (!name) { alert('Ingresa un nombre.'); return; }
-  categories.push({ id: Date.now(), icon: icon || '📌', name });
+  categories.push({ id: Date.now(), icon: icon || '[misc]', name });
   saveCats();
   document.getElementById('cat-create-modal').classList.remove('open');
   renderCatsList();
@@ -1458,7 +1472,7 @@ function renderTxList() {
     filtered.forEach(t => {
       // Merge "Préstamo a X" into one "Préstamos" group
       const isPrestamo = t.category.toLowerCase().startsWith('préstamo') || t.category.toLowerCase().startsWith('prestamo');
-      const key = isPrestamo ? '🤝 Préstamos' : t.category;
+      const key = isPrestamo ? '[prest] Préstamos' : t.category;
       if (!groups[key]) groups[key] = { items: [], total: 0, isPrestamo };
       groups[key].items.push(t);
       groups[key].total += (t.type==='income' ? t.amount : -t.amount);
@@ -1467,7 +1481,7 @@ function renderTxList() {
     el.innerHTML = '<div>' + sorted.map(cat => {
       const g = groups[cat];
       const catObj = categories.find(c=>c.name===cat);
-      const emoji = g.isPrestamo ? '🤝' : (catObj ? catObj.icon : getCatEmoji(cat));
+      const emoji = g.isPrestamo ? '[prest]' : (catObj ? catObj.icon : getCatEmoji(cat));
       const displayName = g.isPrestamo ? 'Préstamos' : cat;
       const totalColor = g.total >= 0 ? '#4db87a' : '#c87070';
       const amt = Math.abs(g.total).toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
@@ -1862,7 +1876,7 @@ function addCategory() {
   const icon = document.getElementById('cat-icon').value.trim();
   const name = document.getElementById('cat-name').value.trim();
   if (!name) { alert('Ingresa un nombre.'); return; }
-  categories.push({ id: Date.now(), icon: icon || '📌', name });
+  categories.push({ id: Date.now(), icon: icon || '[misc]', name });
   saveCats();
   document.getElementById('cat-icon').value = '';
   document.getElementById('cat-name').value = '';
@@ -2043,6 +2057,7 @@ if(params.get('add')==='1'){
   openAddTx(params.get('type')||'expense');
 }
 
+migrateBalances();
 updateAll();
 </script>
 </body>
