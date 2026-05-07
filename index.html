@@ -547,7 +547,7 @@ select.form-input option { background: #1e1e28; }
           <div style="color:rgba(255,255,255,0.5);font-size:10px;margin-top:2px">este mes</div>
         </div>
       </div>
-      <button id="acc-detail-adjust-btn" style="background:rgba(0,0,0,0.22);border:none;color:#fff;font-size:12px;font-weight:500;padding:9px 18px;border-radius:10px;cursor:pointer;font-family:inherit;width:100%">Ajustar saldo</button>
+
     </div>
     <!-- Tabs -->
     <div style="display:flex;background:var(--surface2);border-radius:12px;padding:3px;gap:2px;margin-bottom:16px">
@@ -1097,13 +1097,19 @@ function addAccount() {
   const balance=parseFloat(document.getElementById('ac-balance').value)||0;
   const color=document.getElementById('ac-color').value;
   if(!name){alert('Ingresa un nombre.');return;}
-  accounts.push({id:Date.now(),name,type,balance,color});
+  accounts.push({id:Date.now(),name,type,initialBalance:balance,color});
   save(); document.getElementById('ac-name').value=''; document.getElementById('ac-balance').value='';
   showPage('page-wallet');
   updateAll();
 }
 
 function deleteAccount(id) { accounts=accounts.filter(a=>a.id!==id); save(); updateAll(); }
+
+function calcBalance(acc) {
+  const txs = transactions.filter(t => t.accountId === acc.id);
+  const txSum = txs.reduce((s,t) => s + (t.type==='income' ? t.amount : -t.amount), 0);
+  return (acc.initialBalance || acc.balance || 0) + txSum;
+}
 
 function openAdjust(idx) {
   adjustAccIdx=idx;
@@ -1119,7 +1125,7 @@ function confirmAdjust() {
 }
 
 function renderWallet() {
-  const total=accounts.reduce((s,a)=>s+a.balance,0);
+  const total=accounts.reduce((s,a)=>s+calcBalance(a),0);
   const favor=debts.filter(d=>d.type==='favor').reduce((s,d)=>s+d.amount,0);
   const contra=debts.filter(d=>d.type==='contra').reduce((s,d)=>s+d.amount,0);
   const available=total+favor-contra;
@@ -1148,8 +1154,7 @@ function renderWallet() {
         <div class="wallet-acc-type" style="color:${typeColor};font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em">${TYPE_LABELS[a.type]||a.type}</div>
       </div>
       <div class="wallet-acc-name" style="color:${textColor};font-size:16px;font-weight:500;margin:10px 0 4px">${a.name}</div>
-      <div class="wallet-acc-balance" style="color:${textColor};font-size:24px;font-weight:300;letter-spacing:-.5px">${fmt(a.balance)}</div>
-      <button class="wallet-acc-btn" onclick="event.stopPropagation();openAdjust(${i})" style="margin-top:14px;${btnStyle}border:none;font-size:12px;font-weight:500;padding:8px 12px;border-radius:8px;cursor:pointer;font-family:inherit;width:100%">Ajustar saldo</button>
+      <div class="wallet-acc-balance" style="color:${textColor};font-size:24px;font-weight:300;letter-spacing:-.5px">${fmt(calcBalance(a))}</div>
     </div>`;
   }).join('');
 }
@@ -1184,7 +1189,7 @@ function addTx() {
   if (!date) { alert('Selecciona una fecha.'); return; }
   const accId = accountId ? parseInt(accountId) : null;
   transactions.unshift({type:txType, category:cat, amount, date, note, accountId:accId, id:Date.now()});
-  if (accId) { const acc=accounts.find(a=>a.id===accId); if(acc) acc.balance+=(txType==='income'?amount:-amount); }
+  // balance is now computed dynamically via calcBalance
   save();
   document.getElementById('f-cat').value='';
   document.getElementById('f-amount').value='';
@@ -1197,7 +1202,7 @@ function addTx() {
 
 function deleteTx(id) {
   const tx=transactions.find(t=>t.id===id);
-  if(tx&&tx.accountId){const acc=accounts.find(a=>a.id===tx.accountId);if(acc)acc.balance+=(tx.type==='income'?-tx.amount:tx.amount);}
+  // balance is now computed dynamically via calcBalance
   transactions=transactions.filter(t=>t.id!==id);
   save();updateAll();
 }
@@ -1211,7 +1216,7 @@ function updateMetrics() {
   const m=getMonthly();
   const income=m.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
   const expense=m.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
-  const totalBalance=accounts.reduce((s,a)=>s+a.balance,0);
+  const totalBalance=accounts.reduce((s,a)=>s+calcBalance(a),0);
   document.getElementById('h-total-balance').innerHTML = '<span class="hero-amount-prefix">S/ </span>' + Math.abs(totalBalance).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2});
   document.getElementById('h-income-pill').textContent='↑ '+fmt(income);
   document.getElementById('h-expense-pill').textContent='↓ '+fmt(expense);
@@ -1434,7 +1439,7 @@ function renderTxList() {
       const totalAmt = Math.abs(g.total).toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
       return '<div>' +
         '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:5px;border-bottom:0.5px solid var(--border2)">' +
-          '<span style="font-size:12px;font-weight:500;color:#ABABBC;text-transform:capitalize">' + dLabel + '</span>' +
+          '<span style="font-size:12px;font-weight:500;color:#ABABBC">' + dLabel.charAt(0).toUpperCase()+dLabel.slice(1) + '</span>' +
           '<span style="font-size:12px;font-weight:500;color:#ABABBC">S/ ' + totalAmt + '</span>' +
         '</div>' +
         g.items.map(t => txHTML(t, false)).join('') +
@@ -1634,7 +1639,7 @@ function addDebt() {
   if(debtType==='favor' && sourceAccId) {
     const acc=accounts.find(a=>a.id===parseInt(sourceAccId));
     if(acc) {
-      acc.balance -= amount;
+      // balance computed dynamically — no manual mutation needed
       transactions.unshift({type:'expense',category:'Préstamo a '+name,amount,date:created,note:reason||'',accountId:parseInt(sourceAccId),id:Date.now()});
       save();
     }
@@ -1667,7 +1672,7 @@ function confirmSettle() {
     const acc=accounts.find(a=>a.id===parseInt(accId));
     if(acc){
       const txT=debt.type==='favor'?'income':'expense';
-      acc.balance+=txT==='income'?amount:-amount;
+      // balance computed dynamically
       transactions.unshift({type:txT,category:cat,amount,date:todayStr(),note:debt.name,accountId:parseInt(accId),id:Date.now()});
       save();
     }
@@ -1800,12 +1805,12 @@ function saveTxEdit() {
   // Revert old account balance
   if (t.accountId) {
     const oldAcc = accounts.find(a => a.id === t.accountId);
-    if (oldAcc) oldAcc.balance += (t.type==='income' ? -t.amount : t.amount);
+    // balance computed dynamically
   }
   // Apply new account balance
   if (newAccId) {
     const newAcc = accounts.find(a => a.id === newAccId);
-    if (newAcc) newAcc.balance += (t.type==='income' ? newAmount : -newAmount);
+    // balance computed dynamically
   }
 
   t.category = newCat;
@@ -1931,7 +1936,6 @@ function renderAccDetail() {
   const detailTypeEl = document.getElementById('acc-detail-type');
   const detailNameEl = document.getElementById('acc-detail-name');
   const detailBalanceEl = document.getElementById('acc-detail-balance');
-  const adjustBtn = document.getElementById('acc-detail-adjust-btn');
   if (isLightMode && aKey) {
     bannerEl.style.background = SOFT_BG[aKey];
     bannerEl.style.border = '1px solid ' + SOFT_BDR[aKey];
@@ -1940,10 +1944,7 @@ function renderAccDetail() {
     detailNameEl.style.color = '#1C1C1E';
     detailBalanceEl.style.color = '#1C1C1E';
     detailBalanceEl.style.fontWeight = '200';
-    adjustBtn.style.background = SOFT_BG[aKey];
-    adjustBtn.style.color = SOFT_TYPE_COLOR[aKey];
-    adjustBtn.style.border = '1px solid ' + SOFT_BDR[aKey];
-    // mini income/expense labels
+          // mini income/expense labels
     const incEl = document.getElementById('acc-detail-income');
     const expEl = document.getElementById('acc-detail-expense');
     if (incEl) incEl.style.color = '#2DA866';
@@ -1955,29 +1956,17 @@ function renderAccDetail() {
     detailNameEl.style.color = '#fff';
     detailBalanceEl.style.color = '#fff';
     detailBalanceEl.style.fontWeight = '300';
-    adjustBtn.style.background = 'rgba(0,0,0,0.22)';
-    adjustBtn.style.color = '#fff';
-    adjustBtn.style.border = 'none';
-  }
+        }
   document.getElementById('acc-detail-type').textContent = TYPE_LABELS[a.type] || a.type;
   document.getElementById('acc-detail-name').textContent = a.name;
-  document.getElementById('acc-detail-balance').textContent = fmt(a.balance);
+  document.getElementById('acc-detail-balance').textContent = fmt(calcBalance(a));
 
-  // Ingresos y gastos del mes de esta cuenta
-  const now = new Date();
-  const monthTxs = transactions.filter(t => {
-    if (t.accountId !== a.id) return false;
-    const d = new Date(t.date + 'T12:00:00');
-    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-  });
-  const income = monthTxs.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
-  const expense = monthTxs.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
+  // Ingresos y gastos históricos totales de esta cuenta
+  const allAccTxs = transactions.filter(t => t.accountId === a.id);
+  const income = allAccTxs.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
+  const expense = allAccTxs.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
   document.getElementById('acc-detail-income').textContent = '+' + fmt(income);
   document.getElementById('acc-detail-expense').textContent = fmt(expense);
-
-  // Adjust button
-  const idx = accounts.findIndex(ac => ac.id === a.id);
-  document.getElementById('acc-detail-adjust-btn').onclick = () => openAdjust(idx);
 
   // Reset tabs
   ['all','income','expense'].forEach(t => {
@@ -2027,7 +2016,7 @@ function renderAccDetailTxList() {
     }
     return '<div>' +
       '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:5px;border-bottom:0.5px solid var(--border2)">' +
-        '<span style="font-size:12px;font-weight:500;color:#ABABBC;text-transform:capitalize">' + dLabel + '</span>' +
+        '<span style="font-size:12px;font-weight:500;color:#ABABBC">' + dLabel.charAt(0).toUpperCase()+dLabel.slice(1) + '</span>' +
         summaryHtml +
       '</div>' +
       g.items.map(t => txHTML(t, true)).join('') +
