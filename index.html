@@ -978,6 +978,7 @@ select.form-input option { background: #1e1e28; }
       </div>
     </div>
     <button class="btn-primary" onclick="saveDebtEdit()">Guardar cambios</button>
+    <button onclick="confirmDeleteDebt()" style="width:100%;margin-top:8px;padding:14px;background:var(--red-dim);color:var(--red);border:none;border-radius:14px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit">Eliminar deuda</button>
   </div>
 </div>
 
@@ -1719,19 +1720,26 @@ function renderDebts() {
           <div class="debt-name">${d.name}</div>
           ${d.reason?`<div style="font-size:12px;color:var(--text3);margin-top:2px">${d.reason}</div>`:''}
         </div>
-        <div class="debt-amount ${d.type}">${fmt(d.amount)}</div>
       </div>
       <div class="debt-meta"><span>Desde ${created}</span><span class="debt-due ${status.cls}">${status.label}</span></div>
       <div class="debt-actions">
         <button class="debt-paid-btn" onclick="openSettle(${idx})">${d.type==='favor'?'✓ Cobrado':'✓ Pagado'}</button>
         <button class="debt-del-btn" onclick="openDebtEdit(${idx})">Editar</button>
-        <button class="debt-del-btn" onclick="deleteDebt(${d.id})">Eliminar</button>
       </div>
     </div>`;
   }).join('');
 }
 
 let editDebtIdx = null;
+
+function confirmDeleteDebt() {
+  const d = debts[editDebtIdx];
+  if (!d) return;
+  if (confirm('¿Eliminar esta deuda?')) {
+    deleteDebt(d.id);
+    document.getElementById('debt-edit-modal').classList.remove('active');
+  }
+}
 
 function openDebtEdit(idx) {
   editDebtIdx = idx;
