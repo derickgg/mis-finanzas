@@ -675,7 +675,7 @@ select.form-input option { background: #1e1e28; }
 
 <!-- DEUDAS -->
 <div class="page" id="page-debts">
-  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Deudas</div><div class="topbar-badge" id="debts-topbar-net">S/ 0.00</div></div>
+  <div class="topbar"><button class="back-btn" onclick="showPage('page-home',document.getElementById('nav-home'))"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button><div class="topbar-title">Deudas</div></div>
   <div class="page-content">
     <div class="debt-summary">
       <div class="stat-card">
@@ -1703,8 +1703,6 @@ function renderDebts() {
   document.getElementById('debt-net').textContent=fmt(net);
   document.getElementById('debt-net').style.color=net>=0?'var(--green)':'var(--red)';
   document.getElementById('debt-net-sub').textContent=net>=0?'A tu favor':'En tu contra';
-  const dtEl = document.getElementById('debts-topbar-net');
-  if (dtEl) { dtEl.textContent=(net>=0?'+ ':'-')+fmt(Math.abs(net)); dtEl.className='topbar-badge '+(net>=0?'green':'red'); }
 
   const el=document.getElementById('debts-list');
   if(!debts.length){el.innerHTML='<div class="empty-state">Sin deudas registradas</div>';return;}
