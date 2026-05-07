@@ -1112,17 +1112,14 @@ function calcBalance(acc) {
 }
 
 function migrateBalances() {
-  let changed = false;
+  const migrationVersion = 2;
+  const currentVersion = parseInt(localStorage.getItem('fin_migration_v') || '0');
+  if (currentVersion >= migrationVersion) return;
   accounts.forEach(acc => {
-    if (acc.initialBalance === undefined) {
-      // Compute what the txSum was, back out the initial balance
-      const txs = transactions.filter(t => t.accountId === acc.id);
-      const txSum = txs.reduce((s,t) => s + (t.type==='income' ? t.amount : -t.amount), 0);
-      acc.initialBalance = (acc.balance || 0) - txSum;
-      changed = true;
-    }
+    acc.initialBalance = 0;
   });
-  if (changed) save();
+  save();
+  localStorage.setItem('fin_migration_v', migrationVersion);
 }
 
 function openAdjust(idx) {
