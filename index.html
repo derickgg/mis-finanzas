@@ -1478,14 +1478,14 @@ function renderTxList() {
     el.innerHTML = '<div>' + sorted.map(cat => {
       const g = groups[cat];
       const catObj = categories.find(c=>c.name===cat);
-      const emoji = g.isPrestamo ? '[prest]' : (catObj ? catObj.icon : getCatEmoji(cat));
+      const emoji = g.isPrestamo ? '🤝' : (catObj ? catObj.icon : getCatEmoji(cat));
       const displayName = g.isPrestamo ? 'Préstamos' : cat;
       const totalColor = g.total >= 0 ? '#4db87a' : '#c87070';
       const amt = Math.abs(g.total).toLocaleString('es-PE', {minimumFractionDigits:2, maximumFractionDigits:2});
       const safeCat = cat.replace(/'/g, "\\'");
       return '<div class="cat-group-item">' +
         '<div class="cat-group-header" onclick="openCatDetail(\''+safeCat+'\','+g.isPrestamo+')" style="cursor:pointer">' +
-          '<div class="cat-group-name"><span>'+emoji+'</span><span>'+displayName+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
+          '<div class="cat-group-name"><span>'+emoji+'</span><span>'+displayName+'</span></div>' +
           '<div class="cat-group-right">' +
             '<span class="cat-group-total" style="color:'+totalColor+'">S/ '+amt+'</span>' +
             '<svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="#ABABBC" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>' +
@@ -1515,7 +1515,7 @@ function renderTxList() {
       const safeName = g.name.replace(/'/g,"\\'");
       return '<div class="cat-group-item">' +
         '<div class="cat-group-header" style="cursor:default">' +
-          '<div class="cat-group-name"><span style="width:10px;height:10px;border-radius:50%;background:'+g.color+';display:inline-block"></span><span>'+g.name+'</span><span class="cat-group-count">'+g.items.length+' mov.</span></div>' +
+          '<div class="cat-group-name"><span style="width:10px;height:10px;border-radius:50%;background:'+g.color+';display:inline-block"></span><span>'+g.name+'</span></div>' +
           '<div class="cat-group-right"><span class="cat-group-total" style="color:'+totalColor+'">'+sign+fmt(Math.abs(g.total))+'</span></div>' +
         '</div>' +
         g.items.map(t=>txHTML(t,true)).join('') +
