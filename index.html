@@ -1397,16 +1397,24 @@ function confirmSettle() {
   const accId=document.getElementById('settle-account').value;
   const cat=document.getElementById('settle-cat').value||(debt.type==='favor'?'Cobro de deuda':'Pago de deuda');
   const amount=parseFloat(document.getElementById('settle-amount').value)||debt.amount;
+  const isPartial = amount < debt.amount;
+
   if(accId){
     const acc=accounts.find(a=>a.id===parseInt(accId));
     if(acc){
       const txT=debt.type==='favor'?'income':'expense';
-      // balance computed dynamically
       transactions.unshift({type:txT,category:cat,amount,date:todayStr(),note:debt.name,accountId:parseInt(accId),id:Date.now()});
       save();
     }
   }
-  debts.splice(settleDebtIdx,1);saveDebts();
+
+  if(isPartial){
+    debts[settleDebtIdx].amount=Math.round((debt.amount-amount)*100)/100;
+    saveDebts();
+  } else {
+    debts.splice(settleDebtIdx,1);saveDebts();
+  }
+
   document.getElementById('settle-modal').classList.remove('open');
   updateAll();
 }
